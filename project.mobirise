@@ -6,7 +6,7 @@
       "name": "mobirise-amp",
       "title": "Mobirise AMP",
       "styling": {
-        "primaryColor": "#27ab83",
+        "primaryColor": "#197bc6",
         "secondaryColor": "#4addff",
         "successColor": "#0dcd7b",
         "infoColor": "#8282e7",
@@ -16,7 +16,7 @@
         "display1Font": "Roboto",
         "display1Size": 4.5,
         "display2Font": "Roboto",
-        "display2Size": "2.8",
+        "display2Size": "2.2",
         "display5Font": "Roboto",
         "display5Size": 1.8,
         "display7Font": "Roboto",
@@ -221,6 +221,9 @@
               }
             },
             ".brand-name B": {
+              "color": "#197bc6"
+            },
+            ".brand-name P": {
               "color": "#197bc6"
             }
           },
@@ -501,6 +504,9 @@
               }
             },
             ".brand-name B": {
+              "color": "#197bc6"
+            },
+            ".brand-name P": {
               "color": "#197bc6"
             }
           },
