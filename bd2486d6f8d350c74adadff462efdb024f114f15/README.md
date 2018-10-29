@@ -16,6 +16,7 @@
 
 
 ### Good Links to Medical Imaging Paper
-https://github.com/albarqouni/Deep-Learning-for-Medical-Applications
+[https://github.com/albarqouni/Deep-Learning-for-Medical-Applications](https://github.com/albarqouni/Deep-Learning-for-Medical-Applications
+)
 
   
