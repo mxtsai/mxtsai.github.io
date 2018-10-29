@@ -7,12 +7,12 @@
 
 ## Good Papers
 
-* [DeepLung: Deep 3D Dual Path Nets for Automated Pulmonary Nodule Detection and Classification](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/DeepLung.pdf)
+* [DeepLung: Deep 3D Dual Path Nets for Automated Pulmonary Nodule Detection and Classification](https://github.com/mxtsai/mxtsai.github.io/blob/master/bd2486d6f8d350c74adadff462efdb024f114f15/papers/DeepLung.pdf)
   * Keywords: Dual Path Network (DPN), Gradient Boosting Machines (GBM), U-Nets
   * Desgin: uses CT scans, has both segmentation and classification stage
 
 ## Not-So-Good Papers
-* [Identification and classification of brain tumor MRI images with feature extraction using DWT and probabilistic neural network](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/40708_2017_Article_75.pdf)
+* [Identification and classification of brain tumor MRI images with feature extraction using DWT and probabilistic neural network](https://github.com/mxtsai/mxtsai.github.io/blob/master/bd2486d6f8d350c74adadff462efdb024f114f15/papers/40708_2017_Article_75.pdf)
   * using probabilistic neural network instead of CNN, methods seem old and the accuracy doesn't seem realistic
 
 ## Supplement Information
