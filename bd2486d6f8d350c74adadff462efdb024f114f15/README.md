@@ -9,7 +9,7 @@
 
 * [DeepLung: Deep 3D Dual Path Nets for Automated Pulmonary Nodule Detection and Classification](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/DeepLung.pdf)
   * Keywords: Dual Path Network (DPN), Gradient Boosting Machines (GBM), U-Nets
-  * Desgin: uses CT scans, has both segmentation and classification stage
+  * Design: uses CT scans, has both segmentation and classification stage
 
 ## Not-So-Good Papers
 * [Identification and classification of brain tumor MRI images with feature extraction using DWT and probabilistic neural network](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/40708_2017_Article_75.pdf)
