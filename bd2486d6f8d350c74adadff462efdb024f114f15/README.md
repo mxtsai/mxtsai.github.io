@@ -1,4 +1,9 @@
-# Sheba_Research
+# Sheba Research
+
+## Current Ideas on Mind
+ * Maybe apply Gradient Boost for classification stage (similar to DeepLung)?
+ * Extend research to include also segmentation (inspired by Deeplung)?
+ * How to fix the issue of differerent tumor sizes? 
 
 ## Good Articles
 
