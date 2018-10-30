@@ -22,8 +22,11 @@
 
 ## Interesting Papers (not read yet)
 * [Wavelet Convolutional Network](https://arxiv.org/pdf/1805.08620.pdf)
-* [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf)
+* [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf) (few training sets, addresses multi-modal)
 
+ **Multi-Modal Papers**
+  * [Multi Modal Convolutional Neural Networks for Brain Tumor Segmentation](https://arxiv.org/pdf/1809.06191.pdf)
+  * [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)
 
 
 ## Supplement Information
