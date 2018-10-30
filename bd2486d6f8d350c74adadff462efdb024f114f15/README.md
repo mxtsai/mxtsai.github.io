@@ -11,6 +11,10 @@
   * Keywords: Dual Path Network (DPN), Gradient Boosting Machines (GBM), U-Nets
   * Design: uses CT scans, has both segmentation and classification stage
 
+* [Dual Path Networks](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/1707.01629.pdf)
+  * Keywords: ResNet, DenseNet, HORNN (Higher Order RNN)
+  * Design: resuses features, and can explore new features
+
 ## Not-So-Good Papers
 * [Identification and classification of brain tumor MRI images with feature extraction using DWT and probabilistic neural network](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/40708_2017_Article_75.pdf)
   * using probabilistic neural network instead of CNN, methods seem old and the accuracy doesn't seem realistic
