@@ -26,8 +26,8 @@ The `Program` folder contains three pieces of code:
  `augument_and_upload.py` takes the cropped contour, and performs data augmentation from it. In addition, if we are interested in backing up out data, this piece of code can upload it to Dropbox as backup. 
  
  ### Download Link
- [main.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/main.py)
- [pacs_to_python.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/pacs_to_python.py)
- [augument_and_upload.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/augument_and_upload.py)
+  * [main.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/main.py) 
+  * [pacs_to_python.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/pacs_to_python.py) 
+  * [augument_and_upload.py](mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/augument_and_upload.py)  
  
   
