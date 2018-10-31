@@ -1,4 +1,4 @@
-# Pre-Processor Documentation
+# Preprocessing Documentation
 
   * Need to install [PyDicom](https://pydicom.github.io/pydicom/stable/index.html)
   
