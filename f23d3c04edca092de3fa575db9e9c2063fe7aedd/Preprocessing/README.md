@@ -1,5 +1,12 @@
 # Preprocessing Documentation
 
+## New Method
+ * Use `dicom-contour` package
+ * Check this [link](https://medium.com/@keremturgutlu/debut-dicom-contour-9ce74326bdbe) and [this](https://github.com/KeremTurgutlu/dicom-contour)
+
+
+
+## Old Methods
   * Need to install [PyDicom](https://pydicom.github.io/pydicom/stable/index.html)
   
   ### Files Placement
@@ -30,4 +37,5 @@ The `Program` folder contains three pieces of code:
   * [pacs_to_python.py](https://mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/pacs_to_python.py) 
   * [augument_and_upload.py](https://mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/augument_and_upload.py)  
  
+  
   
