@@ -20,6 +20,7 @@
 ## Interesting Papers (not read yet)
 * [Wavelet Convolutional Network](https://arxiv.org/pdf/1805.08620.pdf)
 * [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf) (few training sets, addresses multi-modal)
+* [Accurate Pulmonary Nodule Detection in Computed Tomography Images Using Deep Convolutional Neural Networks](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/1706.04303.pdf) (has a network to reduce false positives)
 
  **Multi-Modal Papers**
   * [Multi Modal Convolutional Neural Networks for Brain Tumor Segmentation](https://arxiv.org/pdf/1809.06191.pdf)
