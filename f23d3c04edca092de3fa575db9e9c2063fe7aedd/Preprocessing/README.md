@@ -37,5 +37,15 @@ The `Program` folder contains three pieces of code:
   * [pacs_to_python.py](https://mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/pacs_to_python.py) 
   * [augument_and_upload.py](https://mxtsai.github.io/bd2486d6f8d350c74adadff462efdb024f114f15/ResearchFiles/Preprocessing/augument_and_upload.py)  
  
-  
+ 
+ ## Some Useful Scripts
+```python
+#Rename Batch Files [Script]
+import os
+PATH = "C:/Users/Maxwell/Desktop/QXXO1Y2I"
+
+#Going through all the files in this directory
+for filename in os.listdir(PATH):
+	os.rename(PATH+"/"+filename,PATH+"/"+filename+".dcm")
+ ```
   
