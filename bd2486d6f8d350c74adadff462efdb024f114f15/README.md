@@ -32,6 +32,8 @@
 * Understanding **Gradient Boost** > [*link*](http://www.cse.chalmers.se/~richajo/dit865/files/gb_explainer.pdf) 
 * **Wavelets** (Transform) Introduction [*link*](http://dsp.vscht.cz/hostalke/upload/WaveletTransform_Lecture.pdf)
 
+* **Course on Machine Learning** > [*Official Site*](https://mlcourse.ai) and [*Lecture Videos*](https://www.youtube.com/watch?v=QKTuw4PNOsU&list=PLVlY_7IJCMJeRfZ68eVfEcu-UcN9BbwiX)  
+   - Includes topic on Random Forest, Ensembles, Gradient Boosting   
 
 ### Good Links to Medical Imaging Paper
 1. [https://github.com/albarqouni/Deep-Learning-for-Medical-Applications](https://github.com/albarqouni/Deep-Learning-for-Medical-Applications
