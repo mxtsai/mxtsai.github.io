@@ -10,6 +10,12 @@
 * [DeepLung: Deep 3D Dual Path Nets for Automated Pulmonary Nodule Detection and Classification](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/DeepLung.pdf)
   * Keywords: Dual Path Network (DPN), Gradient Boosting Machines (GBM), U-Nets
   * Design: uses CT scans, has both segmentation and classification stage
+  
+* [Fusion of deep learning models of MRI scans, Mini–Mental State Examination, and logical memory test enhances diagnosis of mild cognitive impairment](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/1-s2.0-S2352872918300654-main.pdf)
+  * Took the 3D MRI and grouped the slices into categories. Then selected 3 slices that are similar between each patient and trained a 2D CNN using transfer learning on each 2D slice.  
+  * Incorporated other non-image tests (like BIRADS) and built a SVM using that for prediction.
+  * Used majority vote of the the MRI and test's SVM to predict result
+  * **Problem:** : Unsure if tumor can be categorized as such, need more information on breast cancer to select such slices 
 
 ### Network Architectures
 * [Dual Path Networks](https://github.com/mxtsai/Sheba_Research/blob/master/Papers/1707.01629.pdf)
