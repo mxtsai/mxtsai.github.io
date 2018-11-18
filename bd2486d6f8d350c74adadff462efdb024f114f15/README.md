@@ -14,7 +14,6 @@
   
 * [Multi Modal Convolutional Neural Networks for Brain Tumor Segmentation](https://drive.google.com/open?id=1t6cmvZ3wQs3qEuQ-NVLhz05l7WecLxiq)
   * Late convolution fusion layer works better than sum or max fusion
-  * Some doubts regarding accuracy of paper (need verification)
   
 * [Fusion of deep learning models of MRI scans, Mini–Mental State Examination, and logical memory test enhances diagnosis of mild cognitive impairment](https://drive.google.com/open?id=13Nhzs9Q_c0ObVP78CLpS0aAsSztltekF)
   * Took the 3D MRI and grouped the slices into categories. Then selected 3 slices that are similar between each patient and trained a 2D CNN using transfer learning on each 2D slice.  
@@ -44,6 +43,7 @@
 
 * **Course on Machine Learning** > [*Official Site*](https://mlcourse.ai) and [*Lecture Videos*](https://www.youtube.com/watch?v=QKTuw4PNOsU&list=PLVlY_7IJCMJeRfZ68eVfEcu-UcN9BbwiX)  
    - Includes topic on Random Forest, Ensembles, Gradient Boosting   
+* **Introduction to Generative Adversarial Networks**> [*Orielly*](https://www.oreilly.com/learning/generative-adversarial-networks-for-beginners?fbclid=IwAR3WT8qgsc4caZNx5sFccURW5YZ9DEL0BHfUEtIQ2KpQw5lmFCW8yuJ8VJ0)  
 
 ### Good Links to Medical Imaging Paper
 1. [https://github.com/albarqouni/Deep-Learning-for-Medical-Applications](https://github.com/albarqouni/Deep-Learning-for-Medical-Applications
