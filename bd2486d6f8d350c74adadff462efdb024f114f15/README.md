@@ -33,7 +33,10 @@
 * [Accurate Pulmonary Nodule Detection in Computed Tomography Images Using Deep Convolutional Neural Networks](https://drive.google.com/open?id=1bTGA9gkvhQwZxSwFSaf9aS-IYrgt27ZQ) (has a network to reduce false positives)
 * [Segmentation of the Proximal Femur from MR Images using Deep Convolutional Neural Networks](https://drive.google.com/file/d/15nxOf2YbY07wNSF6bXI0oU_Ss6-NNFtH/view?usp=sharing)
  **Multi-Modal Papers**
-  * [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)
+* [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)
+
+ **General Deep Learning Papers**
+* [A Baseline for Multi-Label Image Classification Using Ensemble Deep CNN](https://arxiv.org/pdf/1811.08412.pdf)
 
 
 ## Supplement Information
