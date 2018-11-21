@@ -29,11 +29,20 @@
 
 ## Interesting Papers (not read yet)
 * [Wavelet Convolutional Network](https://arxiv.org/pdf/1805.08620.pdf)
-* [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf) (few training sets, addresses multi-modal)
 * [Accurate Pulmonary Nodule Detection in Computed Tomography Images Using Deep Convolutional Neural Networks](https://drive.google.com/open?id=1bTGA9gkvhQwZxSwFSaf9aS-IYrgt27ZQ) (has a network to reduce false positives)
 * [Segmentation of the Proximal Femur from MR Images using Deep Convolutional Neural Networks](https://drive.google.com/file/d/15nxOf2YbY07wNSF6bXI0oU_Ss6-NNFtH/view?usp=sharing)  
+* [3D MRI brain tumor segmentation using autoencoder regularization](https://arxiv.org/pdf/1810.11654v3.pdf)  
+* [The method of multimodal MRI brain image segmentation based on differential geometric features](https://arxiv.org/pdf/1811.04281v2.pdf)  
+
+
  **Multi-Modal Papers**
-* [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)
+* [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)  
+
+
+ **GAN's**
+* [Injecting and removing malignant features in mammography with CycleGAN](https://arxiv.org/pdf/1811.07767v1.pdf)
+* [GENERATING DIFFUSION MRI SCALAR MAPS FROM T1 WEIGHTED IMAGES USING GENERATIVE ADVERSARIAL NETWORKS](https://arxiv.org/pdf/1810.02683v1.pdf)  
+* [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf) (few training sets, addresses multi-modal)
 
  **General Deep Learning Papers**
 * [A Baseline for Multi-Label Image Classification Using Ensemble Deep CNN](https://arxiv.org/pdf/1811.08412.pdf)
