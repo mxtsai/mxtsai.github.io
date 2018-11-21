@@ -31,7 +31,7 @@
 * [Wavelet Convolutional Network](https://arxiv.org/pdf/1805.08620.pdf)
 * [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/pdf/1810.12241.pdf) (few training sets, addresses multi-modal)
 * [Accurate Pulmonary Nodule Detection in Computed Tomography Images Using Deep Convolutional Neural Networks](https://drive.google.com/open?id=1bTGA9gkvhQwZxSwFSaf9aS-IYrgt27ZQ) (has a network to reduce false positives)
-* [Segmentation of the Proximal Femur from MR Images using Deep Convolutional Neural Networks](https://drive.google.com/file/d/15nxOf2YbY07wNSF6bXI0oU_Ss6-NNFtH/view?usp=sharing)
+* [Segmentation of the Proximal Femur from MR Images using Deep Convolutional Neural Networks](https://drive.google.com/file/d/15nxOf2YbY07wNSF6bXI0oU_Ss6-NNFtH/view?usp=sharing)  
  **Multi-Modal Papers**
 * [Dense Multi-path U-Net for Ischemic Stroke Lesion Segmentation in Multiple Image Modalities](https://arxiv.org/pdf/1810.07003.pdf)
 
