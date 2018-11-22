@@ -1,10 +1,11 @@
 # Preprocessing Documentation
 
-## New Method
- * Use `dicom-contour` package
- * Check this [link](https://medium.com/@keremturgutlu/debut-dicom-contour-9ce74326bdbe) and [this](https://github.com/KeremTurgutlu/dicom-contour)
+## Contour Extraction [NEW]  
+See the [file](
+        https://mxtsai.github.io/f23d3c04edca092de3fa575db9e9c2063fe7aedd/Preprocessing/Contour_Extraction.ipynb
+      )
 
-### Reading Value from CurveData in DICOM files
+### Note: Reading Value from CurveData in DICOM files
 
 We assume the values are read from 'CurveData' in each DICOM file with contours.  
 	- The VR (Value representation) using Pydicom is listed [here](https://github.com/pieper/pydicom/blob/master/source/generate_dict/dict_2011.csv)  
