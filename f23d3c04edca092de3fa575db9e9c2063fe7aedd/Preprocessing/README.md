@@ -4,6 +4,15 @@
  * Use `dicom-contour` package
  * Check this [link](https://medium.com/@keremturgutlu/debut-dicom-contour-9ce74326bdbe) and [this](https://github.com/KeremTurgutlu/dicom-contour)
 
+### Reading Value from CurveData in DICOM files
+
+We assume the values are read from 'CurveData' in each DICOM file with contours.  
+	- The VR (Value representation) using Pydicom is listed [here](https://github.com/pieper/pydicom/blob/master/source/generate_dict/dict_2011.csv)  
+As seen, `CurveData` is read as either type `OD` or `OW`, which according to [the DICOM standards](http://dicom.nema.org/MEDICAL/dicom/2017b/output/chtml/part05/sect_6.2.html) is either of type `Other Double` or `Other Word`.  
+
+
+*An example can be seen [here](https://github.com/pydicom/pydicom/blob/159d707039f7b931e5aca1b87a404b63db6dec04/pydicom/tests/test_filewriter.py). Search for 'curve'.*  
+
 
 
 ## Old Methods
