@@ -1735,29 +1735,6 @@ body {
 .cid-r40UzU1jl6 .mbr-text {
   color: #465052;
 }
-.cid-rFDImcyJiR {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  background-color: #ffffff;
-}
-.cid-rFDImcyJiR [class^="socicon-"]:before,
-.cid-rFDImcyJiR [class*=" socicon-"]:before {
-  line-height: 44px;
-}
-.cid-rFDImcyJiR .btn-social {
-  border-color: #149dcc;
-}
-.cid-rFDImcyJiR .btn-social:hover {
-  background: #149dcc;
-}
-.cid-rFDImcyJiR .btn-social:hover i.socicon {
-  color: #ffffff !important;
-}
-@media (max-width: 767px) {
-  .cid-rFDImcyJiR .btn {
-    font-size: 20px !important;
-  }
-}
 .cid-r40Ol6dXQ5 .navbar {
   background: #ffffff;
   transition: none;
