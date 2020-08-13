@@ -1,1 +1,0 @@
-# Papers for Medical Imaging 
