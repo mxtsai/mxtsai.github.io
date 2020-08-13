@@ -713,7 +713,7 @@ section.lazy-placeholder:after {
 }
 .cid-s7xin7Q5Gr {
   padding-top: 45px;
-  padding-bottom: 30px;
+  padding-bottom: 0px;
   background-color: #efefef;
 }
 @media (min-width: 992px) {
@@ -744,6 +744,9 @@ section.lazy-placeholder:after {
 }
 .cid-s7xin7Q5Gr DIV {
   text-align: left;
+}
+.cid-s7xin7Q5Gr P {
+  color: #635a51;
 }
 .cid-s7xST4hQKV {
   padding-top: 30px;
@@ -816,5 +819,5 @@ section.lazy-placeholder:after {
 .cid-s7y24WbEdH {
   padding-top: 15px;
   padding-bottom: 15px;
-  background-color: #2e2e2e;
+  background-color: #635a51;
 }
