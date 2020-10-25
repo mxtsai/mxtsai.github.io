@@ -31,7 +31,8 @@
         "#f7f7f7",
         "#4267b2",
         "#1b2785",
-        "#141f75"
+        "#141f75",
+        "#404040"
       ]
     },
     "path": "@PROJECT_PATH@",
@@ -76,7 +77,7 @@
     "siteUrl": false,
     "cookiesAlert": false,
     "gdpr": false,
-    "uniqCompNum": 32,
+    "uniqCompNum": 33,
     "versionPublish": "4.12.4",
     "screenshot": "screenshot.png"
   },
@@ -364,13 +365,35 @@
             }
           },
           "_name": "content4",
-          "_customHTML": "<section class=\"mbr-section content4\" group=\"Article\" data-bg-video=\"{{bg.type == 'video' && bg.value.url}}\" mbr-class=\"{'mbr-parallax-background': bg.parallax}\">\n\n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"range\" inline title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"8\" step=\"1\" value=\"3\">\n        <input type=\"range\" inline title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"8\" step=\"1\" value=\"1\">\n\n        <input type=\"checkbox\" title=\"Show Title\" name=\"showTitle\" checked>\n        <input type=\"checkbox\" title=\"Show Subtitle\" name=\"showSubtitle\" checked>\n        <input type=\"checkbox\" title=\"Show Buttons\" name=\"showButtons\">\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#ffffff\">\n    <!-- End block parameters -->\n    </mbr-parameters>\n\n    <div class=\"container\">\n        <div class=\"media-container-row\">\n            <div class=\"title col-12 col-md-8\">\n                <h2 mbr-if=\"showTitle\" class=\"align-center pb-3 mbr-fonts-style\" mbr-theme-style=\"display-2\">Academics / Awards</h2>\n                <h3 mbr-if=\"showSubtitle\" data-app-selector=\".mbr-section-subtitle\" class=\"mbr-section-subtitle align-center mbr-light mbr-fonts-style\" mbr-theme-style=\"display-5\">[2020] Spotlight Presentation @ MICCAI LABELS Workshop 2020&nbsp;\n<div>[2020] Spotlight Presentation @ MIDL 2020&nbsp;<br>[2018-2020] M.Sc. in EE @ Tel Aviv University - GPA: 90/100<br>[2015-2019] &nbsp;B.Sc. in EE @ Tel Aviv University &nbsp;(magna cum laude) -- GPA: 92/100<br>[2014] Rank of Excellence (2nd place) @ Intel Science and Engineering Fair, China<br></div><br><div><b>M.Sc. Courses [2018</b><b>&nbsp;-2020] : </b><br>Computer Vision</div><div>Advanced Topics in Machine Learning<br>Design &amp; Analysis of Algorithms<br>Digital Processing of Multi-Dimensional Signals<br>Natural Language Processing</div><div>Optimization<br>Statistical Machine Learning<br>Integral and Differential Equations</div><br><div><b>B.Sc. Courses :</b></div><div><b>[2018 - 2019]</b></div><div>Digital Signal Processing, &nbsp;VLSI, &nbsp;EE Lab 3, &nbsp;Communications Lab, &nbsp;Power Electronics Lab, VLSI Lab, &nbsp;Computer Structures Lab</div><div>Computer Structures &amp; Operating Systems, &nbsp;Power Electronics, &nbsp;Microwave Lab, &nbsp;Control Lab, &nbsp;DSP Lab</div><div><br></div><div><b>[2017 - 2018]</b></div>Analog Electronic Circuits, &nbsp;Random Signals and Noise, &nbsp;Wave Transmission and Distributed Systems, &nbsp;Energy Conversion, &nbsp;Control Theory, &nbsp;EE Lab 1<br>Digital Electronic Circuits, &nbsp;Communication Systems, &nbsp;Practical Feedback Systems, &nbsp;RF Circuits and Antennas, &nbsp;EE Lab 2, &nbsp;Energy Conversion Lab<br><div><b><br></b></div><div><b>[2016 - 2017]</b></div>Quantum &amp; Solid State Physics, &nbsp;Linear Circuits &amp; Systems, &nbsp;Harmonic Analysis, &nbsp;Numerical Analysis, &nbsp;Complex Functions, &nbsp;MATLAB<br>Electronic Devices, &nbsp;Data Structures &amp; Algorithms, &nbsp;Electromagnetic Fields, &nbsp;Signals &amp; Systems, &nbsp;Partial Differential Equations, &nbsp;Probability &amp; Statistics<br><br><div><b>[2015 - 2016]</b></div><div>Physics 1, &nbsp;Calculus 1B, &nbsp;Linear Algebra, &nbsp;Python<br>Physics 2, &nbsp;Calculus 2B, &nbsp;Ordinary Differential Equations, &nbsp;Digital Logic Systems, &nbsp;C</div><div><br></div></h3>\n                <div class=\"mbr-section-btn align-center py-4\" mbr-if=\"showButtons\" mbr-buttons mbr-theme-style=\"display-4\">\n                    <a class=\"btn btn-primary\" href=\"https://mobirise.co\">LEARN MORE</a>\n                    <a class=\"btn btn-black-outline\" href=\"https://mobirise.co\">LIVE DEMO</a>\n                </div>\n            </div>\n        </div>\n    </div>\n</section>",
+          "_customHTML": "<section class=\"mbr-section content4\" group=\"Article\" data-bg-video=\"{{bg.type == 'video' && bg.value.url}}\" mbr-class=\"{'mbr-parallax-background': bg.parallax}\">\n\n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"range\" inline title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"8\" step=\"1\" value=\"3\">\n        <input type=\"range\" inline title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"8\" step=\"1\" value=\"1\">\n\n        <input type=\"checkbox\" title=\"Show Title\" name=\"showTitle\" checked>\n        <input type=\"checkbox\" title=\"Show Subtitle\" name=\"showSubtitle\" checked>\n        <input type=\"checkbox\" title=\"Show Buttons\" name=\"showButtons\">\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#ffffff\">\n    <!-- End block parameters -->\n    </mbr-parameters>\n\n    <div class=\"container\">\n        <div class=\"media-container-row\">\n            <div class=\"title col-12 col-md-8\">\n                <h2 mbr-if=\"showTitle\" class=\"align-center pb-3 mbr-fonts-style\" mbr-theme-style=\"display-2\">Academics / Awards</h2>\n                <h3 mbr-if=\"showSubtitle\" data-app-selector=\".mbr-section-subtitle\" class=\"mbr-section-subtitle align-center mbr-light mbr-fonts-style\" mbr-theme-style=\"display-5\">[2020] Spotlight Presentation @ MICCAI LABELS Workshop 2020&nbsp;\n<div>[2020] Spotlight Presentation @ MIDL 2020&nbsp;<br>[2018-2020] M.Sc. in EE @ Tel Aviv University - GPA: 90/100<br>[2015-2019] &nbsp;B.Sc. in EE @ Tel Aviv University &nbsp;(magna cum laude) -- GPA: 92/100<br>[2014] Rank of Excellence (2nd place) @ Intel Science and Engineering Fair, China</div></h3>\n                <div class=\"mbr-section-btn align-center py-4\" mbr-if=\"showButtons\" mbr-buttons mbr-theme-style=\"display-4\">\n                    <a class=\"btn btn-primary\" href=\"https://mobirise.co\">LEARN MORE</a>\n                    <a class=\"btn btn-black-outline\" href=\"https://mobirise.co\">LIVE DEMO</a>\n                </div>\n            </div>\n        </div>\n    </div>\n</section>",
           "_cid": "s7y0lDQBHS",
           "_anchor": "content4-k",
           "_protectedParams": [],
           "_global": false,
           "_once": false,
           "_params": {}
+        },
+        {
+          "alias": false,
+          "_styles": {
+            "padding-top": "(@paddingTop * 15px)",
+            "padding-bottom": "(@paddingBottom * 15px)",
+            "background-color": "@bgColor",
+            ".mbr-text, blockquote": {
+              "color": "#767676"
+            },
+            ".mbr-text": {
+              "color": "#404040"
+            }
+          },
+          "_name": "content1",
+          "_customHTML": "<section class=\"mbr-section article content1\">\n    \n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"range\" inline title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"8\" step=\"1\" value=\"1\">\n        <input type=\"range\" inline title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"8\" step=\"1\" value=\"1\">\n        <input type=\"range\" inline title=\"Width Content\" name=\"widthContent\" min=\"1\" max=\"4\" step=\"1\" value=\"2\">\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#ffffff\">\n    <!-- End block parameters -->\n    </mbr-parameters> \n\n    <div class=\"container\">\n        <div class=\"media-container-row\">\n            <div class=\"mbr-text col-12 mbr-fonts-style\" mbr-theme-style=\"display-4\" data-app-selector=\".mbr-text\" data-multiline mbr-article mbr-class=\"{'col-md-6': widthContent == 1, 'col-md-8': widthContent == 2, 'col-md-10': widthContent == 3, 'col-md-12': widthContent == 4}\"><b>M.Sc. Courses [2018 - 2020] : \n</b><div>Computer Vision\n</div><div>Advanced Topics in Machine Learning\n</div><div>Design &amp; Analysis of Algorithms\n</div><div>Digital Processing of Multi-Dimensional Signals\n</div><div>Natural Language Processing\n</div><div>Optimization\n</div><div>Statistical Machine Learning\n</div><div>Integral and Differential Equations</div><div><br></div><div><b>B.Sc. Courses :\n</b></div><div><b>[2018 - 2019]\n</b></div><div>Digital Signal Processing,  VLSI,  EE Lab 3,  Communications Lab,  Power Electronics Lab, VLSI Lab,  Computer Structures Lab\n</div><div>Computer Structures &amp; Operating Systems,  Power Electronics,  Microwave Lab,  Control Lab,  DSP Lab\n</div><div>\n</div><div><b>[2017 - 2018]\n</b></div><div>Analog Electronic Circuits,  Random Signals and Noise,  Wave Transmission and Distributed Systems,  Energy Conversion,  Control Theory,  EE Lab 1\n</div><div>Digital Electronic Circuits,  Communication Systems,  Practical Feedback Systems,  RF Circuits and Antennas,  EE Lab 2,  Energy Conversion Lab\n</div><div>\n</div><div><b>[2016 - 2017]\n</b></div><div>Quantum &amp; Solid State Physics,  Linear Circuits &amp; Systems,  Harmonic Analysis,  Numerical Analysis,  Complex Functions,  MATLAB\n</div><div>Electronic Devices,  Data Structures &amp; Algorithms,  Electromagnetic Fields,  Signals &amp; Systems,  Partial Differential Equations,  Probability &amp; Statistics\n</div><div>\n</div><div><b>[2015 - 2016]\n</b></div><div>Physics 1,  Calculus 1B,  Linear Algebra,  Python\n</div><div>Physics 2, Calculus 2B,  Ordinary Differential Equations,  Digital Logic Systems,  C\n</div><div><br></div><div><br></div></div>\n        </div>\n    </div>\n</section>",
+          "_cid": "seoM0G9he4",
+          "_protectedParams": [],
+          "_global": false,
+          "_once": false,
+          "_params": {},
+          "_anchor": "content1-w"
         },
         {
           "alias": false,
