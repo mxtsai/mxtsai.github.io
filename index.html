@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Maxwell Tsai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: sans-serif;
@@ -115,6 +116,23 @@
             padding-bottom: 5px;
             text-align: left;
         }
+        @media (max-width: 600px) {
+            /* CSS styles for screens with a maximum width of 600px (mobile devices) */
+            .header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-image {
+                margin-bottom: 10px;
+            }
+            .paper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .thumbnail {
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -139,7 +157,7 @@
             Prior to joining HTC, I was a machine learning researcher at the Computational Imaging Lab in the <a href="https://www.shebaonline.org/">Sheba Medical Center</a>, Israel (ranked <a href="https://www.newsweek.com/best-hospitals-2020">top-9</a> worldwide).         
         </p>
         <p>
-            I obtained my M.Sc. from Tel Aviv University under the supervision of Prof. Nahum Kiryati and Dr. Arnaldo Mayer. 
+            I obtained my M.Sc. from Tel Aviv University under the supervision of <a href="https://www.kiryati.sites.tau.ac.il/">Prof. Nahum Kiryati</a> and Dr. Arnaldo Mayer. 
             My research focus was in medical imaging with the addition of medical report processing. 
         </p>
         <p>
@@ -197,7 +215,9 @@
                 <div class="paper-authors">Chen-Han Tsai, Nahum Kiryati, Eli Konen, Iris Eshed, Arnaldo Mayer</div>
                 <div class="paper-source">MIDL 2020</div>
                 <a class="paper-link" href="https://proceedings.mlr.press/v121/tsai20a.html">PMLR</a> / 
-                <a class="paper-link" href="https://arxiv.org/abs/2005.02706">Arxiv</a>
+                <a class="paper-link" href="https://arxiv.org/abs/2005.02706">Arxiv</a> / 
+                <a class="paper-link" href="https://github.com/mxtsai/ELNet">Code</a> / 
+                <a class="paper-link" href="https://www.youtube.com/watch?v=ucWYdEJ545k&ab_channel=MIDLSociety">Video</a>
             </div>
         </div>
         
