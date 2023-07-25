@@ -4,8 +4,12 @@
     <title>Maxwell Tsai</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @font-face {
+            font-family: 'OpenSans'; /* Give a unique name to your custom font */
+            src: url('./fonts/OpenSans-Regular.woff2') format('woff2'),
+        }
         body {
-            font-family: sans-serif;
+            font-family: 'OpenSans', sans-serif;
         }
         .header {
             display: flex;
@@ -96,12 +100,13 @@
             margin-bottom: 5px;
         }
         .paper-authors {
-            color: #525151;
+            color: #131212;
             margin-bottom: 5px;
         }
         .paper-source {
             color: #665;
             margin-bottom: 5px;
+            font-style: italic;
         }
         .paper-link {
             color: #06c;
@@ -168,17 +173,27 @@
     </div>
 
     <div class="achievements">
-        <b> <font size="+1">Achievements / Academics</font></b><br><br>
+        <b> <font size="+1">Achievements</font></b><br>
         <div class="achievement_details">
-            Spotlight Presentation @ MICCAI 2022, MIDL 2020 <br>
-            M.Sc. in EEE from Tel Aviv University (2020) - GPA: 90/100 <br>
-            <!-- B.Sc. in EEE from Tel Aviv University (2019) - GPA: 92/100, <i>magma cum laude</i> -->
-            <span class="degree">B.Sc. in EEE</span> from <span class="university">Tel Aviv University</span> (2019) - GPA: <span class="gpa">92/100</span>, magna cum laude
+            -  2nd Place @ The 1<sup>st</sup> HTC Artifical Intelligence Hackathon 2023 (competed with 50+ teams within HTC Corporation) <br>
+            -  Spotlight Presentation @ MICCAI 2022, MIDL 2020 <br>
+            -  <span class="degree">M.Sc. in EEE</span> from <span class="university">Tel Aviv University</span> (2020) - GPA: <span class="gpa">90/100</span><br>
+            -  <span class="degree">B.Sc. in EEE</span> from <span class="university">Tel Aviv University</span> (2019) - GPA: <span class="gpa">92/100</span>, magna cum laude
         </div>
     </div>
 
     <div class="papers">
         <b> <font size="+1">Publications</font></b><br><br>
+        <div class="paper">
+            <img class="thumbnail" src="./imgs/ransac-nn.png" alt="RANSAC-NN">
+            <div class="paper-details">
+                <div class="paper-title">RANSAC-NN: Unsupervised Image Outlier Detection using RANSAC</div>
+                <div class="paper-authors">Chen-Han Tsai, Yu-Shao Peng</div>
+                <div class="paper-source">Preprint</div>
+                <a class="paper-link" href="https://arxiv.org/abs/2307.12301">Arxiv</a> / 
+                <a class="paper-link" href="https://github.com/mxtsai/ransac-nn">Code</a>
+            </div>
+        </div>
         <div class="paper">
             <img class="thumbnail" src="./imgs/multitask.png" alt="Dual Head Network">
             <div class="paper-details">
@@ -223,6 +238,6 @@
         
 
     </div>
-    <div class="footer">last updated June 2023</div>
+    <div class="footer">last updated July 2023</div>
 </body>
 </html>
