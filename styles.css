@@ -1,0 +1,270 @@
+/* styles.css: clean, slightly stylish theme with dark-mode, typography, spacing, and responsive layout */
+
+/* Font face for local OpenSans */
+@font-face {
+  font-family: 'OpenSans';
+  src: url('./fonts/OpenSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #0f172a; /* slate-900 */
+  --muted: #475569; /* slate-600 */
+  --link: #0b68d7;
+  --link-hover: #094fa6;
+  --card: #f8fafc; /* slate-50 */
+  --border: #e2e8f0; /* slate-200 */
+  --accent: #0ea5e9; /* sky-500 */
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --link: #7cc4ff;
+    --link-hover: #a8d7ff;
+    --card: #0f172a;
+    --border: #1f2937;
+    --accent: #38bdf8;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: 'OpenSans', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global link styles */
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+a:hover {
+  color: var(--link-hover);
+  border-bottom-color: currentColor;
+}
+
+.container {
+  max-width: 980px;
+  padding: 24px 20px 40px;
+  margin: 0 auto;
+}
+
+.site-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 24px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.profile-image {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(14, 165, 233, 0.15); /* subtle accent ring */
+}
+
+.header-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.name {
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.title {
+  font-size: 16px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.affiliation, .email {
+  margin: 0;
+  color: var(--muted);
+}
+
+.links { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap;
+}
+.divider { color: var(--muted); }
+
+.content {
+  margin-top: 28px;
+}
+
+.section-title {
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  margin: 22px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.intro p { 
+  margin: 8px 0 0;
+}
+
+.list {
+  margin: 8px 0 0 18px;
+}
+
+.papers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* Timeline */
+.timeline { margin-top: 24px; }
+.tl { 
+  list-style: none; 
+  margin: 8px 0 0; 
+  padding: 0 0 0 28px; /* create consistent gutter for line + marker */
+  position: relative; 
+}
+.tl::before {
+  content: "";
+  position: absolute;
+  left: 14px; /* center of marker (12px marker => 14px line) */
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item { 
+  position: relative; 
+  padding: 0 0 22px 0; 
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px 12px 14px;
+  margin-left: 12px; /* separation from the timeline line */
+}
+.tl-title { 
+  margin: 0 0 2px; 
+  font-size: 16px; 
+}
+.tl-meta { 
+  margin: 0 0 8px; 
+  color: var(--muted); 
+  font-size: 13px; 
+}
+.tl-head {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.tl-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+.tl-bullets { 
+  margin: 0; 
+  padding-left: 18px; 
+}
+.tl-bullets li { margin: 4px 0; }
+.muted { color: var(--muted); }
+
+.paper {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.thumbnail {
+  width: 100%;
+  max-width: 170px;
+  max-height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #fff;
+}
+
+.paper-title { 
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+.paper-authors { 
+  margin: 0 0 4px; 
+  color: var(--muted);
+}
+.paper-source { 
+  margin: 0 8px 8px 0; 
+  color: var(--muted); 
+  font-style: italic;
+}
+.paper-links { 
+  margin: 0; 
+}
+.paper-link { 
+  color: var(--link); 
+  text-decoration: none; 
+  border-bottom: 1px solid transparent; 
+}
+.paper-link:hover { 
+  color: var(--link-hover); 
+  border-bottom-color: currentColor; 
+}
+
+.footer {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .site-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .header-details { align-items: center; }
+  .profile-image { margin: 0 auto; }
+  .paper { grid-template-columns: 1fr; }
+
+  /* keep timeline line/marker aligned with consistent left gutter on mobile */
+  .tl { padding-left: 28px; }
+  .tl::before { left: 14px; }
+}

@@ -1,290 +1,310 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1WPK6EJDL2"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1WPK6EJDL2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} 
+            gtag('js', new Date());
+            gtag('config', 'G-1WPK6EJDL2');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Maxwell Tsai</title>
+        <meta name="description" content="Maxwell Tsai — Principal Engineer at HTC DeepQ. Work at the intersection of NLP and computer vision. Publications, invited talks, and contact.">
+        <link rel="icon" href="./imgs/profile.png" type="image/png">
+        <link rel="preload" href="./fonts/OpenSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="./styles.css">
+        <meta property="og:title" content="Maxwell Tsai">
+        <meta property="og:description" content="Principal Engineer at HTC DeepQ. NLP, computer vision, and machine learning.">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="./imgs/profile.png">
+        <meta name="twitter:card" content="summary">
+    </head>
 
-    gtag('config', 'G-1WPK6EJDL2');
-    </script>
-    <title>Maxwell Tsai</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @font-face {
-            font-family: 'OpenSans'; /* Give a unique name to your custom font */
-            src: url('./fonts/OpenSans-Regular.woff2') format('woff2'),
-        }
-        body {
-            font-family: 'OpenSans', sans-serif;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            margin-top: 15px;
-        }
-        .profile-image {
-            width: 135px;
-            height: 135px;
-            border-radius: 50%;
-            margin-right: 20px;
-            margin-left: 20px;
-        }
-        .name {
-            font-size: 25px;
-            font-weight: bold;
-            margin-bottom: 0px;
-            margin-top: 12px;
-        }
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            margin-top: 0px;
-            /* color: #3f3d3d; */
-        }
-        .affiliation{
-            color: #4c4a4a;
-            /* margin-top: 10px; */
-            /* margin-bottom: 15px; */
-        }
-        .email {
-            color: #665;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-        .intro {
-            margin-bottom: 30px;
-            max-width: 90%;
-            margin-left: 10px;
-            padding-top: 5px;
-            /* line-height: 22px; */
-        }
-        .achievements {
-            margin-bottom: 30px;
-            /* max-width: 0%; */
-            margin-left: 10px;
-            padding-top: 5px;
-            line-height: 22px;
-        }
-        .achievement_details {
-            margin-bottom: 30px;
-            /* max-width: 100%; */
-            margin-left: 10px;
-            padding-top: 5px;
-            /* line-height: 22px; */
-        }
-        .invited_talks {
-            margin-bottom: 30px;
-            /* max-width: 0%; */
-            margin-left: 10px;
-            padding-top: 5px;
-            line-height: 22px;
-        }
-        .invited_talks_details {
-            margin-bottom: 30px;
-            /* max-width: 100%; */
-            margin-left: 10px;
-            padding-top: 5px;
-            /* line-height: 22px; */
-        }
-        .invited_talks_link {
-            color: #06c;
-            text-decoration: none;
-        }
-        .papers{
-            margin-left: 10px;
-            /* font-size: 20px; */
-        }
-        .paper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-bottom: 20px;
-            margin-left: 10px;
-        }
-        .thumbnail {
-            /* width: 100px; */
-            /* height: 100px; */
-            max-width: 170px;
-            max-height: 100px;
-            padding-inline-end: 10px;
-            margin-right: 20px;
-        }
-        .paper-details {
-            flex: 1;
-            /* display: flex; */
-            /* flex-direction: column;
-            justify-content: flex-start; */
-            /* text-align: left; */
-        }
-        .paper-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .paper-authors {
-            color: #131212;
-            margin-bottom: 5px;
-        }
-        .paper-source {
-            color: #665;
-            margin-bottom: 5px;
-            font-style: italic;
-        }
-        .paper-link {
-            color: #06c;
-            text-decoration: none;
-        }
-        
-        .footer{
-            padding-top: 30px;
-            color: #807f7f;
-            font-style: italic;
-            font-size: 10pt;
-            padding-left: 5px;
-            padding-bottom: 5px;
-            text-align: left;
-        }
-        @media (max-width: 600px) {
-            /* CSS styles for screens with a maximum width of 600px (mobile devices) */
-            .header {
-                flex-direction: column;
-                align-items: center;
-            }
-            .profile-image {
-                margin-bottom: 10px;
-            }
-            .paper {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .thumbnail {
-                margin-bottom: 10px;
-            }
-        }
-    </style>
-</head>
+    <body>
+        <div class="container">
+                    <header class="site-header">
+                        <img class="profile-image" src="./imgs/profile.png" alt="Portrait of Maxwell Tsai" loading="lazy" decoding="async">
+                <div class="header-details">
+                    <h1 class="name">Maxwell Tsai</h1>
+                    <p class="title">Principal Engineer</p>
+                    <p class="affiliation">M.Sc. in Electrical & Electronic Engineering, Tel Aviv University</p>
+                    <p class="email">maxwelltsai [at] yahoo [dot] com</p>
+                                <nav class="links" aria-label="Site links">
+                                    <a href="#timeline-title">Timeline</a>
+                                    <span class="divider" aria-hidden="true">/</span>
+                        <a href="https://tw.linkedin.com/in/maxwell-tsai-7629a4125">LinkedIn</a>
+                        <span class="divider" aria-hidden="true">/</span>
+                        <a href="https://scholar.google.com/citations?user=MUt3wk8AAAAJ&hl=en">Google Scholar</a>
+                        <span class="divider" aria-hidden="true">/</span>
+                        <a href="https://github.com/mxtsai">GitHub</a>
+                    </nav>
+                </div>
+            </header>
 
-<body>
-    <div class="header">
-        <img class="profile-image" src="./imgs/profile.png" alt="Profile Picture">
-        <div class="header-details">
-            <div class="name">Maxwell Tsai</div>
-            <div class="title">Senior Machine Learning Engineer</div>
-            <div class="affiliation">M.Sc. in EEE from Tel Aviv University</div>
-            <div class="email">maxwelltsai [at] yahoo [dot] com</div>
-            <div class="links">
-                <a href="https://tw.linkedin.com/in/maxwell-tsai-7629a4125">LinkedIn</a> / 
-                <a href="https://scholar.google.com/citations?user=MUt3wk8AAAAJ&hl=en">Google Scholar</a> / 
-                <a href="https://github.com/mxtsai">GitHub</a>
-            </div>
-        </div>
-    </div>
+            <main id="main" class="content" tabindex="-1">
+                <section class="intro" aria-labelledby="intro-title">
+                    <h2 id="intro-title" class="section-title">About</h2>
+                    <p>
+                        Hi, I’m Maxwell — a Principal Engineer at HTC <a href="https://www.deepq.com/">DeepQ</a>. I build machine learning systems at the intersection of natural language processing and computer vision.
+                        Recently, I’ve focused on LLM‑based products for data extraction, clinical chatbots, and medical‑report understanding. I also lead a team of engineers.
+                        Previously, I was a machine learning researcher in the Computational Imaging Lab at <a href="https://www.shebaonline.org/">Sheba Medical Center</a> (Newsweek top‑10 worldwide).
+                    </p>
+                    <p>
+                        I hold an M.Sc. in Electrical & Electronic Engineering from Tel Aviv University, advised by <a href="https://www.kiryati.sites.tau.ac.il/">Prof. Nahum Kiryati</a> and Dr. Arnaldo Mayer. My work spans LLMs, outlier detection for CV/NLP, semi‑supervised learning via knowledge distillation, and flow‑based generative models.
+                    </p>
+                </section>
 
-    <div class="intro">
-        <p>
-            I'm a Senior Machine Learning Engineer at HTC <a href="https://www.deepq.com/">DeepQ</a>.
-            My work involves Natural Language Processing (NLP) and Computer Vision (CV) using Deep Learning.
-            Prior to joining HTC, I was a machine learning researcher at the Computational Imaging Lab in the <a href="https://www.shebaonline.org/">Sheba Medical Center</a>, Israel (<a href="https://www.newsweek.com/best-hospitals-2020">top-9</a> hospital worldwide).         
-        </p>
-        <p>
-            I obtained my M.Sc. at Tel Aviv University under the supervision of <a href="https://www.kiryati.sites.tau.ac.il/">Prof. Nahum Kiryati</a> and Dr. Arnaldo Mayer.
-        </p>
-        <p>
-            I am experienced with developing large language models (LLM's), and I'm familiar with outlier detection techniques for CV and NLP applications. 
-            I have also worked with knowledge-distillation for semi-supervised learning as well as flow-based image generation models.
-        </p>
-    </div>
+                <section class="achievements" aria-labelledby="achievements-title">
+                    <h2 id="achievements-title" class="section-title">Highlights</h2>
+                    <ul class="list">
+                        <li>2nd place, 1st HTC Artificial Intelligence Hackathon (2023, 60+ business units competing)</li>
+                        <li>Spotlight presentations: MICCAI 2022, MIDL 2020</li>
+                        <li>[2018–2020] M.Sc., Tel Aviv University — GPA 90/100 (Accelerated Track)</li>
+                        <li>[2015–2019] B.Sc., Tel Aviv University — GPA 92/100 (Magna Cum Laude)</li>
+                    </ul>
+                </section>
 
-    <div class="achievements">
-        <b> <font size="+1">Achievements</font></b><br>
-        <div class="achievement_details">
-            2nd Place at The 1<sup>st</sup> HTC Artifical Intelligence Hackathon, 2023 (competed with 60+ BU's within HTC Corporation) <br>
-            Spotlight Presentation at MICCAI 2022, MIDL 2020 <br>
-            [2018-2020] <span class="degree">M.Sc. in EEE</span> from <span class="university">Tel Aviv University</span>, GPA <span class="gpa">90/100</span>, <i>Accelerated Track</i><br>
-            [2015-2019] <span class="degree">B.Sc. in EEE</span> from <span class="university">Tel Aviv University</span>, GPA <span class="gpa">92/100</span>, <i>Magna Cum Laude</i>
-        </div>
-    </div>
+                        <section class="timeline" aria-labelledby="timeline-title">
+                            <h2 id="timeline-title" class="section-title">Timeline</h2>
+                                                    <ol class="tl" role="list">
+                                                                                                                <li class="tl-item">
+                                                                                                                        <div class="tl-content">
+                                                                                                                                <div class="tl-head">
+                                                                                                                                            <img class="tl-logo" src="./imgs/deepq.png" alt="HTC DeepQ logo" width="36" height="36" loading="lazy" decoding="async">
+                                                                                                                                    <div>
+                                                                                                                                        <h3 class="tl-title">Principal Engineer — HTC DeepQ</h3>
+                                                                                                                                        <p class="tl-meta">Apr 2025–Present</p>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                                <ul class="tl-bullets">
+                                                                    <li>Architected hybrid‑reasoning LLMs with reinforcement‑learning post‑training, achieving state‑of‑the‑art accuracy on complex clinical‑language tasks.</li>
+                                                                    <li>Deployed a production pipeline that processes ~200,000 nursing reports each month—validated by nursing professionals—while outperforming GPT‑4o in accuracy, running 30× faster, and delivering 5,000× lower cost.</li>
+                                                                    <li>Built organ‑specific summarizers for prostate and breast‑cancer cases, fusing long‑form, multi‑domain clinical data (lab, pathology, imaging, narrative notes) into concise, physician‑validated synopses.</li>
+                                                                    <li>Lead a team of engineers and interns exploring data‑extraction and information‑validation techniques.</li>
+                                                                    <li>Partner daily with full‑stack engineers, product managers, and physicians to deliver production‑grade AI solutions.</li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                                                                                <li class="tl-item">
+                                                                                                <div class="tl-content">
+                                                                                                                <div class="tl-head">
+                                                                                                                                            <img class="tl-logo" src="./imgs/deepq.png" alt="HTC DeepQ logo" width="36" height="36" loading="lazy" decoding="async">
+                                                                                                                    <div>
+                                                                                                                        <h3 class="tl-title">Senior Engineer — HTC DeepQ</h3>
+                                                                                                                        <p class="tl-meta">Sept 2021–June 2025</p>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <ul class="tl-bullets">
+                                                            <li>Developed custom LLM models for clients in healthcare, government, media, and legal sectors.</li>
+                                                            <li>In charge of Large Language Model (LLM) research & development (pre‑training, fine‑tuning, evaluation, and deployment).</li>
+                                                            <li>Owner of DeepQ AI Platform v2 (feature development and maintenance).</li>
+                                                            <li>Invented internal data cleaning tools for vision and language data management applications.</li>
+                                                            <li>Developed specialized CAD model for simultaneous lung nodule classification and localization (featured model in AI Platform v2.3).</li>
+                                                            <li>Authored 2 papers and 6 patents.</li>
+                                                        </ul>
+                                    </div>
+                                </li>
+                                            <li class="tl-item">
+                                                <div class="tl-content">
+                                                                        <div class="tl-head">
+                                                                                                                                            <img class="tl-logo" src="./imgs/sheba.png" alt="Sheba Medical Center logo" width="36" height="36" loading="lazy" decoding="async">
+                                                                            <div>
+                                                                                <h3 class="tl-title">Machine Learning Researcher — Sheba Medical Center</h3>
+                                                                                <p class="tl-meta">Apr 2018–Sept 2020</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <ul class="tl-bullets">
+                                            <li>Led the development of a COVID‑19 lung CT screening system in Sheba <span class="muted">[underwent pilot tests]</span></li>
+                                            <li>Developed an automated knee MRI diagnosis algorithm suitable for triage <span class="muted">(tested and verified by the Head Radiologist of the MSK Department)</span></li>
+                                            <li>Implemented a text analytics algorithm for labeling breast MRI reports written in Hebrew and English</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ol>
+                        </section>
 
-    <div class="invited_talks">
-        <b> <font size="+1">Invited Talks</font></b><br>
-        <div class="invited_talks_details">
-            AI for the Common Masses, 2023 [<a class="invited_talks_link" href="https://youtu.be/XFvNN9I3F4I?si=YwKqAizHtOdRMqMP">Youtube Link</a>]<br>
-            Guest speaker at <a class="invited_talks_link" href="https://www.viz.ai/">Viz.ai</a> - Knee Injury Detection using MRI with Efficiently-Layered Network (ELNet), 2020<br>
-            <!-- -  Spotlight Presentation @ MICCAI 2022, MIDL 2020 <br>
-            -  <span class="degree">M.Sc. in EEE</span> from <span class="university">Tel Aviv University</span> (2020) - GPA: <span class="gpa">90/100</span><br>
-            -  <span class="degree">B.Sc. in EEE</span> from <span class="university">Tel Aviv University</span> (2019) - GPA: <span class="gpa">92/100</span>, magna cum laude -->
-        </div>
-    </div>
+                <section class="papers" aria-labelledby="pubs-title">
+                    <h2 id="pubs-title" class="section-title">Publications & Patents</h2>
 
-    <div class="papers">
-        <b> <font size="+1">Publications</font></b><br><br>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/ransac-nn.png" alt="RANSAC-NN">
-            <div class="paper-details">
-                <div class="paper-title">Unsupervised Image Outlier Detection using RANSAC</div>
-                <div class="paper-authors">Chen-Han Tsai, Yu-Shao Peng</div>
-                <div class="paper-source">Preprint</div>
-                <a class="paper-link" href="https://arxiv.org/abs/2307.12301">Arxiv</a> / 
-                <a class="paper-link" href="https://github.com/mxtsai/ransac-nn">Code</a>
-            </div>
-        </div>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/multitask.png" alt="Dual Head Network">
-            <div class="paper-details">
-                <div class="paper-title">Multi-task Lung Nodule Detection in Chest Radiographs with a Dual Head Network</div>
-                <div class="paper-authors">Chen-Han Tsai, Yu-Shao Peng</div>
-                <div class="paper-source">MICCAI 2022</div>
-                <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-031-16431-6_67">Springer</a> / 
-                <a class="paper-link" href="https://arxiv.org/abs/2207.03050">Arxiv</a>
-            </div>
-        </div>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/thesis.png" alt="Tel Aviv University Logo">
-            <div class="paper-details">
-                <div class="paper-title">Automated Knee Injury Detection and Localization using 3D MRI Images</div>
-                <div class="paper-authors">Chen-Han Tsai</div>
-                <div class="paper-source">Masters Thesis, Tel Aviv University 2020</div>
-                <a class="paper-link" href="https://tau.primo.exlibrisgroup.com/permalink/972TAU_INST/quev9q/alma9933193796504146">View Publication</a>
-            </div>
-        </div>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/lambr.png" alt="LAMBR">
-            <div class="paper-details">
-                <div class="paper-title">Labeling of Multilingual Breast MRI Reports</div>
-                <div class="paper-authors">Chen-Han Tsai, Nahum Kiryati, Eli Konen, Miri Sklair-Levy, Arnaldo Mayer</div>
-                <div class="paper-source">MICCAI LABELS Workshop 2020</div>
-                <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-030-61166-8_25">Springer</a> / 
-                <a class="paper-link" href="https://arxiv.org/abs/2007.03028">Arxiv</a>
-            </div>
-        </div>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/elnet.png" alt="ELNet">
-            <div class="paper-details">
-                <div class="paper-title">Knee Injury Detection using MRI with Efficiently-Layered Network (ELNet)</div>
-                <div class="paper-authors">Chen-Han Tsai, Nahum Kiryati, Eli Konen, Iris Eshed, Arnaldo Mayer</div>
-                <div class="paper-source">MIDL 2020</div>
-                <a class="paper-link" href="https://proceedings.mlr.press/v121/tsai20a.html">PMLR</a> / 
-                <a class="paper-link" href="https://arxiv.org/abs/2005.02706">Arxiv</a> / 
-                <a class="paper-link" href="https://github.com/mxtsai/ELNet">Code</a> / 
-                <a class="paper-link" href="https://www.youtube.com/watch?v=ucWYdEJ545k&ab_channel=MIDLSociety">Video</a>
-            </div>
-        </div>
-        <div class="paper">
-            <img class="thumbnail" src="./imgs/ddl.png" alt="DeepDictionary">
-            <div class="paper-details">
-                <div class="paper-title">Implementation and Improvements to Deep Dictionary Model</div>
-                <div class="paper-authors">Chen-Han Tsai, Bojun Ouyang</div>
-                <div class="paper-source">Report</div>
-                <a class="paper-link" href="https://github.com/mxtsai/deep_dictionary_learning/blob/master/Deep_Dictionary_Learning_Project_Report.pdf">GitHub</a> 
-            </div>
-        </div>
-        
+                                <article class="paper">
+                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
+                                        <defs>
+                                            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                                                <stop offset="0%" stop-color="#0ea5e9"/>
+                                                <stop offset="100%" stop-color="#60a5fa"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1)" opacity="0.18"/>
+                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
+                                    </svg>
+                        <div class="paper-details">
+                            <h3 class="paper-title">Data classification method for classifying inlier and outlier data</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">US Patent US12292919B2</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://patents.google.com/patent/US12292919B2/en">Patent page</a>
+                            </p>
+                        </div>
+                    </article>
 
-    </div>
-    <div class="footer">last updated March 2024</div>
-</body>
+                                <article class="paper">
+                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
+                                        <defs>
+                                            <linearGradient id="g1c" x1="0" y1="0" x2="1" y2="1">
+                                                <stop offset="0%" stop-color="#0ea5e9"/>
+                                                <stop offset="100%" stop-color="#60a5fa"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1c)" opacity="0.18"/>
+                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
+                                    </svg>
+                        <div class="paper-details">
+                            <h3 class="paper-title">Data classification method for filtering outlier text data</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">US20250077552A1 (patent pending)</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://patents.google.com/patent/US20250077552A1/en">Patent page</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
+                                        <defs>
+                                            <linearGradient id="g1b" x1="0" y1="0" x2="1" y2="1">
+                                                <stop offset="0%" stop-color="#0ea5e9"/>
+                                                <stop offset="100%" stop-color="#60a5fa"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1b)" opacity="0.18"/>
+                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
+                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
+                                    </svg>
+                        <div class="paper-details">
+                            <h3 class="paper-title">Medical image detection system, training method and medical analyzation method</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">US20230316511A1 (patent pending)</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://patents.google.com/patent/US20230316511A1/en">Patent page</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/ransac-nn.png" alt="Thumbnail for RANSAC‑NN paper" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Unsupervised Image Outlier Detection using RANSAC</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">Preprint</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://arxiv.org/abs/2307.12301">ArXiv</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://github.com/mxtsai/ransac-nn">Code</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/multitask.png" alt="Thumbnail for dual‑head network paper" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Multi‑task Lung Nodule Detection in Chest Radiographs with a Dual Head Network</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">MICCAI 2022</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-031-16431-6_67">Springer</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://arxiv.org/abs/2207.03050">ArXiv</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/thesis.png" alt="Tel Aviv University logo" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Automated Knee Injury Detection and Localization using 3D MRI Images</h3>
+                            <p class="paper-authors">Chen‑Han Tsai</p>
+                            <p class="paper-source">Master’s Thesis, Tel Aviv University (2020)</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://tau.primo.exlibrisgroup.com/permalink/972TAU_INST/quev9q/alma9933193796504146">View publication</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/lambr.png" alt="Thumbnail for LAMBR paper" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Labeling of Multilingual Breast MRI Reports</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Nahum Kiryati, Eli Konen, Miri Sklair‑Levy, Arnaldo Mayer</p>
+                            <p class="paper-source">MICCAI LABELS Workshop 2020</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-030-61166-8_25">Springer</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://arxiv.org/abs/2007.03028">ArXiv</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/elnet.png" alt="Thumbnail for ELNet paper" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Knee Injury Detection using MRI with Efficiently‑Layered Network (ELNet)</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Nahum Kiryati, Eli Konen, Iris Eshed, Arnaldo Mayer</p>
+                            <p class="paper-source">MIDL 2020</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://proceedings.mlr.press/v121/tsai20a.html">PMLR</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://arxiv.org/abs/2005.02706">ArXiv</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://github.com/mxtsai/ELNet">Code</a>
+                                <span aria-hidden="true">/</span>
+                                <a class="paper-link" href="https://www.youtube.com/watch?v=ucWYdEJ545k&ab_channel=MIDLSociety">Video</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper">
+                                    <img class="thumbnail" src="./imgs/ddl.png" alt="Thumbnail for Deep Dictionary report" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Implementation and Improvements to Deep Dictionary Model</h3>
+                            <p class="paper-authors">Chen‑Han Tsai, Bojun Ouyang</p>
+                            <p class="paper-source">Report</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://github.com/mxtsai/deep_dictionary_learning/blob/master/Deep_Dictionary_Learning_Project_Report.pdf">GitHub</a>
+                            </p>
+                        </div>
+                    </article>
+                </section>
+                <section class="invited" aria-labelledby="invited-title">
+                    <h2 id="invited-title" class="section-title">Invited Talks</h2>
+                    <ul class="list">
+                        <li>
+                            AI for the Common Masses (2023)
+                            — <a class="inline-link" href="https://youtu.be/XFvNN9I3F4I?si=YwKqAizHtOdRMqMP">YouTube</a>
+                        </li>
+                        <li>
+                            Guest speaker at <a class="inline-link" href="https://www.viz.ai/">Viz.ai</a> — Knee Injury Detection using MRI with Efficiently‑Layered Network (ELNet), 2020
+                        </li>
+                    </ul>
+                </section>
+            </main>
+
+            <footer class="footer" role="contentinfo">
+                <p>last updated October 2025</p>
+            </footer>
+        </div>
+    </body>
 </html>
