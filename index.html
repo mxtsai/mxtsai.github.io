@@ -15,6 +15,7 @@
         <meta name="description" content="Maxwell Tsai — Principal Engineer at HTC DeepQ. Work at the intersection of NLP and computer vision. Publications, invited talks, and contact.">
         <link rel="preload" href="./fonts/OpenSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="./styles.css">
+        <link rel="icon" href="data:,">
         <meta property="og:title" content="Maxwell Tsai">
         <meta property="og:description" content="Principal Engineer at HTC DeepQ. NLP, computer vision, and machine learning.">
         <meta property="og:type" content="website">
@@ -126,35 +127,40 @@
                         </section>
 
                 <section class="papers" aria-labelledby="pubs-title">
-                    <h2 id="pubs-title" class="section-title">Publications & Patents</h2>
+                    <h2 id="pubs-title" class="section-title sr-only">Publications & Patents</h2>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/madebate.png" alt="Thumbnail for Multi‑Agent Debate paper" loading="lazy" decoding="async">
+                    <div class="pubtabs" role="tablist" aria-label="Publications and Patents">
+                        <button id="tab-publication" class="pubtab" role="tab" aria-selected="true" aria-controls="pubs-list" data-tab-type="publication">Publications</button>
+                        <button id="tab-patent" class="pubtab" role="tab" aria-selected="false" aria-controls="pubs-list" data-tab-type="patent">Patents</button>
+                    </div>
+
+                    <div id="pubs-list" class="papers-list" role="tabpanel" aria-labelledby="tab-publication">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/decode.png" alt="Thumbnail for DeCode paper" loading="lazy" decoding="async">
+                        <div class="paper-details">
+                            <h3 class="paper-title">DeCode: Decoupling Content and Delivery for Medical QA</h3>
+                            <p class="paper-authors">Po‑Jen Ko, Chen‑Han Tsai, Yu‑Shao Peng</p>
+                            <p class="paper-source">Preprint, 2026</p>
+                            <p class="paper-links">
+                                <a class="paper-link" href="https://arxiv.org/abs/2601.02123">ArXiv</a>
+                            </p>
+                        </div>
+                    </article>
+
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/madebate.png" alt="Thumbnail for Multi‑Agent Debate paper" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Exploring Health Misinformation Detection with Multi‑Agent Debate</h3>
                             <p class="paper-authors">Chih‑Han Chen, Chen‑Han Tsai, Yu‑Shao Peng</p>
-                            <p class="paper-source">WASP @ IJCNLP‑AACL 2025</p>
+                            <p class="paper-source">WASP Workshop - IJCNLP-AACL, 2025</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://arxiv.org/abs/2512.09935">ArXiv</a>
                             </p>
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
-                                        <defs>
-                                            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                                                <stop offset="0%" stop-color="#0ea5e9"/>
-                                                <stop offset="100%" stop-color="#60a5fa"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1)" opacity="0.18"/>
-                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
-                                    </svg>
+                                <article class="paper" data-type="patent">
+                                    <img class="thumbnail" src="./imgs/patents/US12292919B2.png" alt="Thumbnail for US12292919B2 patent" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Data classification method for classifying inlier and outlier data</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
@@ -165,21 +171,8 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
-                                        <defs>
-                                            <linearGradient id="g1c" x1="0" y1="0" x2="1" y2="1">
-                                                <stop offset="0%" stop-color="#0ea5e9"/>
-                                                <stop offset="100%" stop-color="#60a5fa"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1c)" opacity="0.18"/>
-                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
-                                    </svg>
+                                <article class="paper" data-type="patent">
+                                    <img class="thumbnail" src="./imgs/patents/US20250077552A1.png" alt="Thumbnail for US20250077552A1 patent" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Data classification method for filtering outlier text data</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
@@ -190,21 +183,8 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <svg class="thumbnail" viewBox="0 0 48 48" role="img" aria-label="Patent icon">
-                                        <defs>
-                                            <linearGradient id="g1b" x1="0" y1="0" x2="1" y2="1">
-                                                <stop offset="0%" stop-color="#0ea5e9"/>
-                                                <stop offset="100%" stop-color="#60a5fa"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <rect x="4" y="6" width="32" height="36" rx="3" fill="url(#g1b)" opacity="0.18"/>
-                                        <rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <path d="M32 8v8h8" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                        <rect x="12" y="16" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="20" width="20" height="2" fill="#94a3b8"/>
-                                        <rect x="12" y="24" width="14" height="2" fill="#94a3b8"/>
-                                    </svg>
+                                <article class="paper" data-type="patent">
+                                    <img class="thumbnail" src="./imgs/patents/US20230316511A1.png" alt="Thumbnail for US20230316511A1 patent" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Medical image detection system, training method and medical analyzation method</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
@@ -217,12 +197,12 @@
 
                                 
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/ransac-nn.png" alt="Thumbnail for RANSAC‑NN paper" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/ransac-nn.png" alt="Thumbnail for RANSAC‑NN paper" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Unsupervised Image Outlier Detection using RANSAC</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
-                            <p class="paper-source">Preprint</p>
+                            <p class="paper-source">Preprint, 2023</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://arxiv.org/abs/2307.12301">ArXiv</a>
                                 <span aria-hidden="true">/</span>
@@ -231,12 +211,12 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/multitask.png" alt="Thumbnail for dual‑head network paper" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/multitask.png" alt="Thumbnail for dual‑head network paper" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Multi‑task Lung Nodule Detection in Chest Radiographs with a Dual Head Network</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Yu‑Shao Peng</p>
-                            <p class="paper-source">MICCAI 2022</p>
+                            <p class="paper-source">MICCAI Main Conference, 2022</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-031-16431-6_67">Springer</a>
                                 <span aria-hidden="true">/</span>
@@ -245,24 +225,24 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/thesis.png" alt="Tel Aviv University logo" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/thesis.png" alt="Tel Aviv University logo" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Automated Knee Injury Detection and Localization using 3D MRI Images</h3>
                             <p class="paper-authors">Chen‑Han Tsai</p>
-                            <p class="paper-source">Master’s Thesis, Tel Aviv University (2020)</p>
+                            <p class="paper-source">Master’s Thesis - Tel Aviv University, 2020</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://tau.primo.exlibrisgroup.com/permalink/972TAU_INST/quev9q/alma9933193796504146">View publication</a>
                             </p>
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/lambr.png" alt="Thumbnail for LAMBR paper" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/lambr.png" alt="Thumbnail for LAMBR paper" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Labeling of Multilingual Breast MRI Reports</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Nahum Kiryati, Eli Konen, Miri Sklair‑Levy, Arnaldo Mayer</p>
-                            <p class="paper-source">MICCAI LABELS Workshop 2020</p>
+                            <p class="paper-source">MICCAI LABELS Workshop, 2020</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://link.springer.com/chapter/10.1007/978-3-030-61166-8_25">Springer</a>
                                 <span aria-hidden="true">/</span>
@@ -271,12 +251,12 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/elnet.png" alt="Thumbnail for ELNet paper" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/elnet.png" alt="Thumbnail for ELNet paper" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Knee Injury Detection using MRI with Efficiently‑Layered Network (ELNet)</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Nahum Kiryati, Eli Konen, Iris Eshed, Arnaldo Mayer</p>
-                            <p class="paper-source">MIDL 2020</p>
+                            <p class="paper-source">Medical Image and Deep Learning (MIDL) Conference, 2020</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://proceedings.mlr.press/v121/tsai20a.html">PMLR</a>
                                 <span aria-hidden="true">/</span>
@@ -289,17 +269,18 @@
                         </div>
                     </article>
 
-                                <article class="paper">
-                                    <img class="thumbnail" src="./imgs/ddl.png" alt="Thumbnail for Deep Dictionary report" loading="lazy" decoding="async">
+                                <article class="paper" data-type="publication">
+                                    <img class="thumbnail" src="./imgs/publications/ddl.png" alt="Thumbnail for Deep Dictionary report" loading="lazy" decoding="async">
                         <div class="paper-details">
                             <h3 class="paper-title">Implementation and Improvements to Deep Dictionary Model</h3>
                             <p class="paper-authors">Chen‑Han Tsai, Bojun Ouyang</p>
-                            <p class="paper-source">Report</p>
+                            <p class="paper-source">Technical Report, 2020</p>
                             <p class="paper-links">
                                 <a class="paper-link" href="https://github.com/mxtsai/deep_dictionary_learning/blob/master/Deep_Dictionary_Learning_Project_Report.pdf">GitHub</a>
                             </p>
                         </div>
                     </article>
+                    </div>
                 </section>
                 <section class="invited" aria-labelledby="invited-title">
                     <h2 id="invited-title" class="section-title">Invited Talks</h2>
@@ -316,8 +297,107 @@
             </main>
 
             <footer class="footer" role="contentinfo">
-                <p>last updated December 23, 2025</p>
+                <p>last updated January 6, 2026</p>
             </footer>
-        </div>
+                </div>
+
+                <script>
+                    (function() {
+                        function initTabs() {
+                            const list = document.getElementById('pubs-list');
+                            if (!list) return;
+                            const tabs = Array.from(document.querySelectorAll('.pubtab'));
+                            const items = Array.from(list.querySelectorAll('.paper'));
+
+                            // Store base labels once (e.g., "Publications", "Patents") so we can append counts
+                            tabs.forEach(btn => {
+                                if (!btn.dataset.baseLabel) {
+                                    btn.dataset.baseLabel = btn.textContent.trim();
+                                }
+                            });
+
+                            function updateTabCounts() {
+                                const counts = { publication: 0, patent: 0 };
+                                items.forEach(el => {
+                                    const t = el.dataset.type;
+                                    if (t && counts.hasOwnProperty(t)) counts[t]++;
+                                });
+                                tabs.forEach(btn => {
+                                    const t = btn.dataset.tabType;
+                                    const base = btn.dataset.baseLabel || btn.textContent.trim();
+                                    const n = counts[t] || 0;
+                                    btn.textContent = `${base} (${n})`;
+                                });
+                            }
+
+                            function sizeVisibleThumbnails(type) {
+                                // Limit thumbnail height to 81% of card height for visible items (10% smaller than 90%)
+                                const visible = items.filter(el => el.dataset.type === type && !el.classList.contains('is-hidden'));
+                                visible.forEach(card => {
+                                    const thumb = card.querySelector('.thumbnail');
+                                    if (thumb) {
+                                        const h = card.getBoundingClientRect().height;
+                                        // Use 81% of card height; let browser preserve aspect ratio
+                                        thumb.style.maxHeight = Math.floor(h * 0.81) + 'px';
+                                    }
+                                });
+                            }
+
+                            function applyFilter(type) {
+                                tabs.forEach(btn => btn.setAttribute('aria-selected', String(btn.dataset.tabType === type)));
+                                const active = tabs.find(btn => btn.dataset.tabType === type);
+                                if (active) list.setAttribute('aria-labelledby', active.id);
+                                items.forEach(el => {
+                                    const match = el.dataset.type === type;
+                                    el.classList.toggle('is-hidden', !match);
+                                });
+                                sizeVisibleThumbnails(type);
+                            }
+
+                            tabs.forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                    const t = btn.dataset.tabType;
+                                    if (t) {
+                                        applyFilter(t);
+                                        const hash = t === 'patent' ? '#patents' : '#publications';
+                                        if (history && history.replaceState) {
+                                            history.replaceState(null, '', hash);
+                                        } else {
+                                            location.hash = hash;
+                                        }
+                                    }
+                                });
+                            });
+
+                            function typeFromHash() {
+                                const h = location.hash.toLowerCase();
+                                if (h.includes('patent')) return 'patent';
+                                return 'publication';
+                            }
+
+                            updateTabCounts();
+                            applyFilter(typeFromHash());
+                            window.addEventListener('hashchange', () => {
+                                // counts unlikely to change, but safe to recompute on navigation
+                                updateTabCounts();
+                                const t = typeFromHash();
+                                applyFilter(t);
+                            });
+
+                            // Recompute thumbnail sizes on resize for current tab
+                            window.addEventListener('resize', () => {
+                                const active = tabs.find(btn => btn.getAttribute('aria-selected') === 'true');
+                                const t = active ? active.dataset.tabType : typeFromHash();
+                                sizeVisibleThumbnails(t);
+                            });
+                        }
+
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', initTabs);
+                        } else {
+                            initTabs();
+                        }
+                    })();
+                </script>
     </body>
 </html>
