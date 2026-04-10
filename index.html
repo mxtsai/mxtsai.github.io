@@ -132,6 +132,7 @@
                     <div class="pubtabs" role="tablist" aria-label="Publications and Patents">
                         <button id="tab-publication" class="pubtab" role="tab" aria-selected="true" aria-controls="pubs-list" data-tab-type="publication">Publications</button>
                         <button id="tab-patent" class="pubtab" role="tab" aria-selected="false" aria-controls="pubs-list" data-tab-type="patent">Patents</button>
+                        <button id="tab-blog" class="pubtab" role="tab" aria-selected="false" aria-controls="pubs-list" data-tab-type="blog">Blog</button>
                     </div>
 
                     <div id="pubs-list" class="papers-list" role="tabpanel" aria-labelledby="tab-publication">
@@ -292,6 +293,13 @@
                             </p>
                         </div>
                     </article>
+                                <article class="paper" data-type="blog" onclick="location.href='./blogs/awq-quantization.html'" style="cursor:pointer;">
+                        <div class="paper-details">
+                            <h3 class="paper-title">Understanding AWQ Quantization</h3>
+                            <p class="paper-source">April 10th, 2026</p>
+                            <p class="paper-authors">In this short post, let's explore the main idea behind Activation-aware Weight Quantization (AWQ). I'll implement this algorithm in basic PyTorch, and explain the core concepts behind the algorithm.</p>
+                        </div>
+                    </article>
                     </div>
                 </section>
                 <section class="invited" aria-labelledby="invited-title">
@@ -329,7 +337,7 @@
                             });
 
                             function updateTabCounts() {
-                                const counts = { publication: 0, patent: 0 };
+                                const counts = { publication: 0, patent: 0, blog: 0 };
                                 items.forEach(el => {
                                     const t = el.dataset.type;
                                     if (t && counts.hasOwnProperty(t)) counts[t]++;
@@ -371,7 +379,7 @@
                                     const t = btn.dataset.tabType;
                                     if (t) {
                                         applyFilter(t);
-                                        const hash = t === 'patent' ? '#patents' : '#publications';
+                                        const hash = t === 'patent' ? '#patents' : t === 'blog' ? '#blog' : '#publications';
                                         if (history && history.replaceState) {
                                             history.replaceState(null, '', hash);
                                         } else {
@@ -384,6 +392,7 @@
                             function typeFromHash() {
                                 const h = location.hash.toLowerCase();
                                 if (h.includes('patent')) return 'patent';
+                                if (h.includes('blog')) return 'blog';
                                 return 'publication';
                             }
 

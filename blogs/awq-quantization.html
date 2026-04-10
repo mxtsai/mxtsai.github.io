@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Understanding AWQ Quantization — Maxwell Tsai</title>
+  <meta name="description" content="A ground-up implementation of AWQ in plain PyTorch.">
+  <link rel="preload" href="../fonts/OpenSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="data:,">
+  <style>
+    @font-face {
+      font-family: 'OpenSans';
+      src: url('../fonts/OpenSans-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --link: #0b68d7;
+      --link-hover: #094fa6;
+      --card: #f8fafc;
+      --border: #e2e8f0;
+      --accent: #0ea5e9;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 28px rgba(15, 23, 42, 0.07);
+      --code-bg: #1a1e2a;
+      --code-border: #2a3040;
+      --code-text: #cdd5e0;
+      --code-kw: #c792ea;
+      --code-fn: #7ec8e3;
+      --code-st: #7fc67a;
+      --code-cm: #7a8fa8;
+      --code-nm: #38bdf8;
+      --code-op: #e06c75;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --link: #7cc4ff;
+        --link-hover: #a8d7ff;
+        --card: #0f172a;
+        --border: #1f2937;
+        --accent: #38bdf8;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.38);
+        --code-bg: #0d1117;
+        --code-border: #1f2937;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { padding: 0; margin: 0; }
+
+    body {
+      font-family: 'OpenSans', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 17px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    a:hover {
+      color: var(--link-hover);
+      border-bottom-color: currentColor;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── Nav ──────────────────────────────────────────────── */
+    .site-nav {
+      padding: 24px 0 0;
+    }
+
+    .back-link {
+      font-size: 14px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: none;
+    }
+    .back-link:hover { color: var(--accent); border-bottom: none; }
+    .back-link::before { content: '←'; }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .post-header {
+      padding: 36px 0 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 16px;
+    }
+
+    .post-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .post-meta {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .post-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 600px;
+    }
+
+    /* ── Content ──────────────────────────────────────────── */
+    .post-content {
+      padding: 48px 0 64px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin: 52px 0 14px;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent);
+      color: var(--text);
+    }
+
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 28px 0 10px;
+    }
+
+    p {
+      margin: 0 0 16px;
+      font-size: 16px;
+    }
+
+    strong { font-weight: 600; }
+
+    em {
+      font-style: italic;
+      color: var(--text);
+    }
+
+    ol, ul {
+      padding-left: 22px;
+      margin: 0 0 16px;
+      font-size: 16px;
+    }
+
+    li { margin-bottom: 6px; line-height: 1.6; }
+
+    /* ── Code ─────────────────────────────────────────────── */
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      font-size: 13px;
+      background: color-mix(in srgb, var(--accent) 10%, var(--card));
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 20px 22px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--code-text);
+      font-size: 1em;
+      border-radius: 0;
+      font-style: normal;
+    }
+
+    .kw  { color: var(--code-kw); font-style: normal; }
+    .fn  { color: var(--code-fn); font-style: normal; }
+    .st  { color: var(--code-st); font-style: normal; }
+    .cm  { color: var(--code-cm); font-style: italic; }
+    .nm  { color: var(--code-nm); font-style: normal; }
+    .op  { color: var(--code-op); font-style: normal; }
+
+    /* ── Math block ───────────────────────────────────────── */
+    .math-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 14px;
+      color: var(--text);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Callouts ─────────────────────────────────────────── */
+    .callout {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .callout.insight { border-left-color: var(--accent); }
+    .callout.note    { border-left-color: var(--link); }
+
+    .callout-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .callout.insight .callout-label { color: var(--accent); }
+    .callout.note    .callout-label { color: var(--link); }
+
+    .callout p { margin-bottom: 0; font-size: 15px; }
+
+    /* ── Output block ─────────────────────────────────────── */
+    .output {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-left: 3px solid var(--muted);
+      border-radius: 8px;
+      padding: 20px 22px;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--code-cm);
+    }
+
+    .output-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+
+    /* ── Dim grid ─────────────────────────────────────────── */
+    .dim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .dim-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .dim-card .var {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .dim-card .shape {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      color: var(--link);
+      margin-bottom: 6px;
+    }
+
+    .dim-card .desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── Result comparison ────────────────────────────────── */
+    .result-row {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .result-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .result-card .value {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .result-card.worse .value { color: #ef4444; }
+    .result-card.better .value { color: #22c55e; }
+
+    /* ── Sweep table ─────────────────────────────────────── */
+    .sweep-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .sweep-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 13px;
+    }
+
+    .sweep-table th {
+      background: var(--card);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .sweep-table th:first-child { text-align: left; }
+
+    .sweep-table td {
+      padding: 10px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .sweep-table td:first-child {
+      text-align: left;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sweep-table tbody tr:last-child td { border-bottom: none; }
+
+    .sweep-table .improvement-row td {
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .sweep-table .improvement-row td:first-child {
+      color: #22c55e;
+    }
+
+    /* ── Quantization diagram ────────────────────────────── */
+    .quant-diagram {
+      margin: 24px 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px 16px;
+      overflow-x: auto;
+    }
+
+    .quant-svg { display: block; width: 100%; min-width: 420px; }
+    .quant-svg .qt-track  { stroke: var(--border); stroke-width: 1.5; }
+    .quant-svg .qt-tick   { stroke: var(--muted); stroke-width: 1.5; }
+    .quant-svg .qt-weight { fill: var(--accent); }
+    .quant-svg .qt-quant  { fill: #22c55e; }
+    .quant-svg .qt-err    { stroke: #ef4444; stroke-width: 1.8; }
+    .quant-svg .qt-lbl    { font-family: inherit; font-size: 12px; fill: var(--muted); }
+    .quant-svg .qt-lbl-b  { font-family: inherit; font-size: 12px; fill: var(--text); font-weight: 600; }
+    .quant-svg .qt-lbl-e  { font-family: inherit; font-size: 11px; fill: #ef4444; }
+    .quant-svg .qt-lbl-g  { font-family: inherit; font-size: 11px; fill: #22c55e; }
+
+    /* ── Divider ──────────────────────────────────────────── */
+    .post-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .post-divider::before, .post-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .post-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0 40px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .formula {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 20px; }
+      .dim-grid { grid-template-columns: 1fr; }
+      .result-row { flex-direction: column; }
+      .post-footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <nav class="site-nav">
+    <a class="back-link" href="../index.html">Maxwell Tsai</a>
+  </nav>
+
+  <header class="post-header">
+    <div class="post-tag">Tutorial · Quantization</div>
+    <h1 class="post-title">Understanding AWQ Quantization</h1>
+    <p class="post-meta">April 10th, 2026</p>
+    <p class="post-subtitle">A ground-up implementation of AWQ in plain PyTorch, based on <a href="https://arxiv.org/abs/2306.00978" target="_blank">Lin et al., 2023</a>.</p>
+  </header>
+
+  <main class="post-content">
+
+    <h2>Why Quantization Hurts?</h2>
+
+    <p>When you quantize a weight matrix from float32 down to 4-bit integers, you're forcing every weight into one of only 15 discrete levels. The rounding error introduced is proportional to <strong>delta</strong> — the step size between levels:</p>
+
+    <div class="math-block">δ = max(|W|) / (2<sup>bits</sup> − 1)</div>
+
+    <p>The larger <code>max(|W|)</code> is, the coarser your grid, and the more error each rounded weight carries. AWQ's core observation is that <strong>not all weight channels are equally important</strong>. Channels corresponding to large input activations dominate the output — so <strong>quantization errors there hurt far more</strong> than errors in channels with small activations.</p>
+
+    <div class="quant-diagram">
+      <svg class="quant-svg" viewBox="0 0 560 225" role="img" aria-label="Comparison of fine and coarse quantization grids for the same weight value">
+
+        <!-- title -->
+        <text x="280" y="18" text-anchor="middle" class="qt-lbl">Same weight value (w = 0.22), same 4-bit budget — different max|W|</text>
+
+        <!-- ── Row 1: Fine grid ── -->
+        <text x="6"  y="72" class="qt-lbl-b">small max|W|</text>
+        <text x="6"  y="87" class="qt-lbl">δ = 0.125</text>
+
+        <!-- track -->
+        <line x1="120" y1="80" x2="500" y2="80" class="qt-track"/>
+
+        <!-- 9 fine ticks at 0, 0.125 … 1.0 → x = 120 + level*380 -->
+        <line x1="120" y1="70" x2="120" y2="90" class="qt-tick"/>
+        <line x1="168" y1="70" x2="168" y2="90" class="qt-tick"/>
+        <line x1="215" y1="70" x2="215" y2="90" class="qt-tick"/>
+        <line x1="263" y1="70" x2="263" y2="90" class="qt-tick"/>
+        <line x1="310" y1="70" x2="310" y2="90" class="qt-tick"/>
+        <line x1="358" y1="70" x2="358" y2="90" class="qt-tick"/>
+        <line x1="405" y1="70" x2="405" y2="90" class="qt-tick"/>
+        <line x1="453" y1="70" x2="453" y2="90" class="qt-tick"/>
+        <line x1="500" y1="70" x2="500" y2="90" class="qt-tick"/>
+
+        <!-- weight at 0.22 → x = 120 + 0.22*380 = 204 -->
+        <circle cx="204" cy="80" r="5.5" class="qt-weight"/>
+
+        <!-- quantized to nearest 0.25 → x = 215 -->
+        <circle cx="215" cy="80" r="5.5" class="qt-quant"/>
+
+        <!-- error bracket: 204 → 215 -->
+        <line x1="204" y1="63" x2="215" y2="63" class="qt-err"/>
+        <line x1="204" y1="60" x2="204" y2="66" class="qt-err"/>
+        <line x1="215" y1="60" x2="215" y2="66" class="qt-err"/>
+        <text x="209" y="57" text-anchor="middle" class="qt-lbl-e">0.03</text>
+
+        <text x="512" y="84" class="qt-lbl-g">small ✓</text>
+
+        <!-- ── Row 2: Coarse grid ── -->
+        <text x="6"  y="158" class="qt-lbl-b">large max|W|</text>
+        <text x="6"  y="173" class="qt-lbl">δ = 0.333</text>
+
+        <!-- track -->
+        <line x1="120" y1="165" x2="500" y2="165" class="qt-track"/>
+
+        <!-- 4 coarse ticks at 0, 0.333, 0.667, 1.0 → x = 120, 247, 373, 500 -->
+        <line x1="120" y1="155" x2="120" y2="175" class="qt-tick"/>
+        <line x1="247" y1="155" x2="247" y2="175" class="qt-tick"/>
+        <line x1="373" y1="155" x2="373" y2="175" class="qt-tick"/>
+        <line x1="500" y1="155" x2="500" y2="175" class="qt-tick"/>
+
+        <!-- weight at 0.22 → x = 204 (same) -->
+        <circle cx="204" cy="165" r="5.5" class="qt-weight"/>
+
+        <!-- quantized to nearest 0.333 → x = 247 -->
+        <circle cx="247" cy="165" r="5.5" class="qt-quant"/>
+
+        <!-- error bracket: 204 → 247 -->
+        <line x1="204" y1="148" x2="247" y2="148" class="qt-err"/>
+        <line x1="204" y1="145" x2="204" y2="151" class="qt-err"/>
+        <line x1="247" y1="145" x2="247" y2="151" class="qt-err"/>
+        <text x="225" y="142" text-anchor="middle" class="qt-lbl-e">0.11</text>
+
+        <text x="512" y="169" class="qt-lbl-e">large ✗</text>
+
+        <!-- legend -->
+        <circle cx="140" cy="204" r="4.5" class="qt-weight"/>
+        <text x="150" y="208" class="qt-lbl">actual weight</text>
+        <circle cx="260" cy="204" r="4.5" class="qt-quant"/>
+        <text x="270" y="208" class="qt-lbl">quantized value</text>
+        <line x1="370" y1="204" x2="388" y2="204" class="qt-err"/>
+        <text x="393" y="208" class="qt-lbl">rounding error</text>
+      </svg>
+    </div>
+
+    <h2>The Scaling Identity</h2>
+
+    <p>The entire method rests on one algebraic fact. For any positive per-channel scale vector <code>s</code>:</p>
+
+    <div class="math-block">W · X = (W · s) · (X / s)</div>
+
+    <p>This is exact — no approximation. If you scale column <em>i</em> of <code>W</code> up by <code>s[i]</code> and row <em>i</em> of <code>X</code> down by <code>s[i]</code>, the output is unchanged. But now when you quantize <code>W · s</code>, channel <em>i</em> occupies a larger portion of the quantization range, which means the rounding grid is finer relative to its values — less error per weight.</p>
+
+    <div class="callout insight">
+      <div class="callout-label">Core Insight</div>
+      <p>Protect the weight channels that matter most by scaling them up before quantization, then compensating on the input side. The math stays equivalent; the quantization error distribution shifts in your favor.</p>
+    </div>
+
+    <h2>Setup</h2>
+
+    <p>Let's fix our tensor conventions before writing any code. We'll use <code>C</code> input channels and <code>N</code> samples:</p>
+
+    <ul>
+      <li><code>X</code> — shape <code>(C, N)</code>: input activations; each row is one channel across all samples</li>
+      <li><code>W</code> — shape <code>(C_out, C)</code>: weight matrix; each column corresponds to one input channel</li>
+      <li><code>s_vec</code> — shape <code>(C,)</code>: one scale per input channel; scales column <em>j</em> of <code>W</code> and row <em>j</em> of <code>X</code></li>
+    </ul>
+
+    <pre><code><span class="kw">import</span> torch
+
+C <span class="op">=</span> <span class="nm">4</span>       <span class="cm"># input channels</span>
+C_out <span class="op">=</span> <span class="nm">8</span>   <span class="cm"># output channels</span>
+N <span class="op">=</span> <span class="nm">2</span>       <span class="cm"># samples</span>
+
+X <span class="op">=</span> torch.<span class="fn">randn</span>(C, N)
+W <span class="op">=</span> torch.<span class="fn">randn</span>(C_out, C)
+Y <span class="op">=</span> W <span class="op">@</span> X   <span class="cm"># ground truth</span></code></pre>
+
+    <h2>Quantized Matmul with Per-Channel Scaling</h2>
+
+    <p>Here's the full implementation. The key is that scaling happens <em>before</em> computing <code>delta</code> — that's what changes the quantization grid for each channel independently.</p>
+
+    <pre><code><span class="kw">def</span> <span class="fn">awq_quantized_matmul</span>(W, X, s_vec, quant_bits<span class="op">=</span><span class="nm">4</span>):
+    <span class="st">"""
+    s_vec: shape (C,) — one scale factor per input channel.
+    Equivalent transform: W' = W * s_vec,  X' = X / s_vec
+    """</span>
+    <span class="cm"># s_vec.unsqueeze(0) → (1, C): scales columns of W</span>
+    W_scaled <span class="op">=</span> W <span class="op">*</span> s_vec.<span class="fn">unsqueeze</span>(<span class="nm">0</span>)
+    <span class="cm"># s_vec.unsqueeze(1) → (C, 1): scales rows of X</span>
+    X_scaled <span class="op">=</span> X <span class="op">/</span> s_vec.<span class="fn">unsqueeze</span>(<span class="nm">1</span>)
+
+    <span class="cm"># Per-row quantization of W_scaled</span>
+    max_w, _ <span class="op">=</span> W_scaled.<span class="fn">abs</span>().<span class="fn">max</span>(dim<span class="op">=-</span><span class="nm">1</span>, keepdim<span class="op">=</span><span class="kw">True</span>)
+    delta <span class="op">=</span> max_w <span class="op">/</span> (<span class="nm">2</span><span class="op">**</span>quant_bits <span class="op">-</span> <span class="nm">1</span>)
+    W_q <span class="op">=</span> delta <span class="op">*</span> (W_scaled <span class="op">/</span> delta).<span class="fn">round</span>()
+
+    <span class="kw">return</span> W_q <span class="op">@</span> X_scaled</code></pre>
+
+    <div class="callout note">
+      <div class="callout-label">Why per-row delta?</div>
+      <p>Each output neuron (row of <code>W</code>) has its own dynamic range. Using a shared delta across all rows would force small-magnitude rows to share grid resolution with large-magnitude ones — wasteful and error-prone. Per-row delta means each output channel uses its full 4-bit range independently.</p>
+    </div>
+
+    <h2>Finding the Optimal Scale Vector</h2>
+
+    <p>The search space for <code>s_vec</code> follows directly from AWQ's insight: channels with large input activations are the ones worth protecting. The paper proposes searching over candidate scales of the form:</p>
+
+    <div class="math-block">s[i] = mean(|X[i, :]|)<sup>α</sup>,  α ∈ [0, 1]</div>
+
+    <p>When <code>α = 0</code>, <code>s[i] = 1</code> (no scaling). When <code>α = 1</code>, <code>s[i] = mean(|X[i, :]|)</code> (full activation magnitude). The exponent interpolates between these extremes, and we search for the best <code>α</code> per channel by minimizing output MSE.</p>
+
+    <div class="callout insight">
+      <div class="callout-label">Why absolute mean, not raw mean?</div>
+      <p>Activations can be negative. A channel with values <code>[1, -1, 1, -1]</code> has zero mean but nonzero magnitude — you want to protect it. Taking <code>abs()</code> first ensures the scale reflects true activation strength.</p>
+    </div>
+
+    <h2>Greedy Sequential Search</h2>
+
+    <p>Each <code>s_vec[i]</code> only affects column <em>i</em> of <code>W</code> and row <em>i</em> of <code>X</code>, so you can optimize channels one at a time. Crucially, once you've found the optimal scale for channel <em>i</em>, you carry it forward when optimizing channel <em>i+1</em> — rather than always starting from all-ones.</p>
+
+    <pre><code><span class="kw">def</span> <span class="fn">find_optimal_svec</span>(W, X, quant_bits<span class="op">=</span><span class="nm">4</span>, steps<span class="op">=</span><span class="nm">100</span>):
+    Y <span class="op">=</span> W <span class="op">@</span> X                         <span class="cm"># ground truth output</span>
+    C <span class="op">=</span> W.<span class="fn">shape</span>[<span class="op">-</span><span class="nm">1</span>]
+    s_opt_vect <span class="op">=</span> torch.<span class="fn">ones</span>((C,))    <span class="cm"># start with no scaling</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(C):
+        X_channel <span class="op">=</span> X[i, :]
+
+        <span class="cm"># Candidate scales: mean_act^alpha for alpha in [0, 1]</span>
+        mean_act <span class="op">=</span> X_channel.<span class="fn">abs</span>().<span class="fn">mean</span>()
+        mean_act_alpha <span class="op">=</span> mean_act <span class="op">**</span> torch.<span class="fn">linspace</span>(<span class="nm">0</span>, <span class="nm">1</span>, steps)
+
+        <span class="cm"># Build candidate s_vecs: carry forward previously found optima</span>
+        s_candidates <span class="op">=</span> s_opt_vect.<span class="fn">unsqueeze</span>(<span class="nm">0</span>).<span class="fn">expand</span>(steps, <span class="op">-</span><span class="nm">1</span>).<span class="fn">detach</span>().<span class="fn">clone</span>()
+        s_candidates[:, i] <span class="op">=</span> mean_act_alpha
+
+        <span class="cm"># Grid search over candidates</span>
+        min_mse, s_opt <span class="op">=</span> <span class="fn">float</span>(<span class="st">'inf'</span>), <span class="nm">1.0</span>
+        <span class="kw">for</span> s <span class="kw">in</span> <span class="fn">range</span>(steps):
+            Y_q <span class="op">=</span> <span class="fn">awq_quantized_matmul</span>(W, X, s_candidates[s], quant_bits)
+            mse <span class="op">=</span> ((Y <span class="op">-</span> Y_q) <span class="op">**</span> <span class="nm">2</span>).<span class="fn">mean</span>()
+            <span class="kw">if</span> mse <span class="op">&lt;</span> min_mse:
+                min_mse <span class="op">=</span> mse
+                s_opt <span class="op">=</span> mean_act_alpha[s]
+
+        s_opt_vect[i] <span class="op">=</span> s_opt   <span class="cm"># carry forward for next channel</span>
+
+    <span class="kw">return</span> s_opt_vect</code></pre>
+
+    <div class="callout insight">
+      <div class="callout-label">Why carry forward?</div>
+      <p>If you reset to all-ones for each channel, you're evaluating candidates in an unrealistic context — every other channel has no scaling, which won't be true when you actually use the combined <code>s_vec</code>. Carrying forward previously found optima means each channel is optimized in the context of the scales already committed to.</p>
+    </div>
+
+    <h2>Putting It Together</h2>
+
+    <pre><code><span class="cm"># Find optimal scales using calibration data</span>
+s_opt <span class="op">=</span> <span class="fn">find_optimal_svec</span>(W, X, quant_bits<span class="op">=</span><span class="nm">4</span>, steps<span class="op">=</span><span class="nm">100</span>)
+
+<span class="cm"># Baseline: no scaling (s_vec = ones)</span>
+Y_q_baseline <span class="op">=</span> <span class="fn">awq_quantized_matmul</span>(W, X, torch.<span class="fn">ones</span>(C), quant_bits<span class="op">=</span><span class="nm">4</span>)
+
+<span class="cm"># AWQ: optimal per-channel scaling</span>
+Y_q_awq <span class="op">=</span> <span class="fn">awq_quantized_matmul</span>(W, X, s_opt, quant_bits<span class="op">=</span><span class="nm">4</span>)
+
+<span class="fn">print</span>(<span class="st">f"MSE Loss:           <span class="kw">{</span>((Y <span class="op">-</span> Y_q_baseline)<span class="op">**</span><span class="nm">2</span>).<span class="fn">mean</span>()<span class="kw">}</span>"</span>)
+<span class="fn">print</span>(<span class="st">f"MSE Loss (Optimal): <span class="kw">{</span>((Y <span class="op">-</span> Y_q_awq)<span class="op">**</span><span class="nm">2</span>).<span class="fn">mean</span>()<span class="kw">}</span>"</span>)
+<span class="fn">print</span>(<span class="st">f"Optimal S_Vec:      <span class="kw">{</span>s_opt<span class="kw">}</span>"</span>)</code></pre>
+
+    <p>For a randomly generated <code>W</code> and <code>X</code>, we obtain the following outputs:</p>
+
+    <div class="output">
+      MSE Loss:           0.001551334047690034<br>
+      MSE Loss (Optimal): 0.00036695192102342844<br>
+      Optimal S_Vec:      tensor([0.8102, 1.0000, 0.8481, 0.6419])
+    </div>
+
+    <div class="result-row">
+      <div class="result-card worse">
+        <div class="label">Baseline (no scaling)</div>
+        <div class="value">0.001551</div>
+      </div>
+      <div class="result-card better">
+        <div class="label">AWQ (optimal s_vec)</div>
+        <div class="value">0.000367</div>
+      </div>
+    </div>
+
+    <p>The improvement here is modest because <code>W</code> and <code>X</code> are random — there's no structure to exploit. In a real pretrained model, certain channels carry dramatically more activation energy than others, and AWQ's gains become much more pronounced, especially at aggressive quantization levels like 3-bit or 4-bit.</p>
+
+    <h2>Effect of Quantization Bits</h2>
+
+    <p>Sweeping across bit-widths shows how AWQ's relative advantage grows at lower precision — exactly where it matters most for deployment.</p>
+
+    <div class="sweep-table-wrap">
+      <table class="sweep-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>1-bit</th>
+            <th>2-bit</th>
+            <th>4-bit</th>
+            <th>6-bit</th>
+            <th>8-bit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Baseline MSE</td>
+            <td>4.30e-01</td>
+            <td>7.03e-02</td>
+            <td>1.55e-03</td>
+            <td>9.10e-05</td>
+            <td>6.79e-06</td>
+          </tr>
+          <tr>
+            <td>AWQ MSE</td>
+            <td>1.41e-01</td>
+            <td>1.76e-02</td>
+            <td>3.67e-04</td>
+            <td>1.23e-05</td>
+            <td>7.15e-07</td>
+          </tr>
+          <tr class="improvement-row">
+            <td>Improvement</td>
+            <td>67.3%</td>
+            <td>75.0%</td>
+            <td>76.4%</td>
+            <td>86.5%</td>
+            <td>89.5%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>What This Implementation Leaves Out</h2>
+
+    <p>This tutorial captures the core mechanism of AWQ. The actual paper and production implementations add several things on top:</p>
+
+    <ul>
+      <li><strong>Real calibration data.</strong> Instead of random <code>X</code>, you run a small subset of real inputs through the model to measure true activation magnitudes per channel.</li>
+      <li><strong>Layer-by-layer application.</strong> The scale search runs independently for every linear layer in the network, not just one matrix.</li>
+      <li><strong>Integer packing.</strong> The quantized weights are packed into efficient integer formats (INT4) for actual inference speedup — this tutorial only simulates the quantization numerically.</li>
+      <li><strong>Group quantization.</strong> Rather than one delta per row, production AWQ often uses one delta per group of 128 weights, giving finer-grained control over the quantization grid.</li>
+    </ul>
+
+    <div class="callout note">
+      <div class="callout-label">Further Reading</div>
+      <p>Lin et al., <em>AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration</em> (2023). The paper includes ablations showing why the <code>α ∈ [0,1]</code> search range works, and why activation magnitude specifically (rather than weight magnitude) is the right signal to use.</p>
+    </div>
+
+    <div class="post-divider">∎</div>
+
+    <h2>Citation</h2>
+
+    <p>If you found this post useful, please cite the original paper and this blog:</p>
+
+    <pre><code><span class="cm"># Original Paper</span>
+@inproceedings{lin2023awq,
+  title     = {AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration},
+  author    = {Lin, Ji and Tang, Jiaming and Tang, Haotian and Yang, Shang and
+               Chen, Wei-Ming and Wang, Wei-Chen and Xiao, Guangxuan and
+               Dang, Xingyu and Gan, Chuang and Han, Song},
+  booktitle = {MLSys},
+  year      = {2024}
+}
+
+<span class="cm"># This Blog</span>
+@misc{tsai2026awq,
+  title  = {Understanding {AWQ} Quantization},
+  author = {Tsai, Chen-Han},
+  year   = {2026},
+  url    = {https://mxtsai.github.io/blogs/awq-quantization.html}
+}</code></pre>
+
+  </main>
+
+  <footer class="post-footer">
+    <span>Built with PyTorch · Based on <a href="https://arxiv.org/pdf/2306.00978" target="_blank">AWQ (Lin et al., 2023)</a></code>
+    <a class="back-link" href="../index.html" style="margin-top:0">Back to home</a>
+  </footer>
+</div>
+
+</body>
+</html>
