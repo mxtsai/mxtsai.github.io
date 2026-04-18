@@ -336,6 +336,10 @@ a:hover {
   border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
 }
 
+.paper[style*="cursor:pointer"]:hover .paper-title {
+  color: var(--accent);
+}
+
 .paper:has(.thumbnail) {
   grid-template-columns: 1fr 233px;
   grid-template-areas: "details thumb";

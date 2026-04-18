@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What is Flash Attention? — Maxwell Tsai</title>
+  <meta name="description" content="Flash Attention is one of the most widely used techniques in modern LLM training and inference. We explore the algorithm from first principles to understand why it matters.">
+  <link rel="preload" href="../fonts/OpenSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    @font-face {
+      font-family: 'OpenSans';
+      src: url('../fonts/OpenSans-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --link: #0b68d7;
+      --link-hover: #094fa6;
+      --card: #f8fafc;
+      --border: #e2e8f0;
+      --accent: #0ea5e9;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 28px rgba(15, 23, 42, 0.07);
+      --code-bg: #1a1e2a;
+      --code-border: #2a3040;
+      --code-text: #cdd5e0;
+      --code-kw: #c792ea;
+      --code-fn: #7ec8e3;
+      --code-st: #7fc67a;
+      --code-cm: #7a8fa8;
+      --code-nm: #38bdf8;
+      --code-op: #e06c75;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --link: #7cc4ff;
+        --link-hover: #a8d7ff;
+        --card: #0f172a;
+        --border: #1f2937;
+        --accent: #38bdf8;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.38);
+        --code-bg: #0d1117;
+        --code-border: #1f2937;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { padding: 0; margin: 0; }
+
+    body {
+      font-family: 'OpenSans', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 17px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; }
+    a:hover { color: var(--link-hover); border-bottom-color: currentColor; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 0 32px; }
+
+    /* ── Nav ──────────────────────────────────────────────── */
+    .site-nav { padding: 24px 0 0; }
+
+    .back-link {
+      font-size: 14px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: none;
+    }
+    .back-link:hover { color: var(--accent); border-bottom: none; }
+    .back-link::before { content: '←'; }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .post-header { padding: 36px 0 40px; border-bottom: 1px solid var(--border); }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 16px;
+    }
+
+    .post-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .post-meta { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+
+    .post-subtitle { font-size: 16px; color: var(--muted); line-height: 1.6; margin: 0; max-width: 600px; }
+
+    /* ── Content ──────────────────────────────────────────── */
+    .post-content { padding: 48px 0 64px; }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin: 52px 0 14px;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent);
+      color: var(--text);
+    }
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 28px 0 10px;
+    }
+
+    p { margin: 0 0 16px; font-size: 16px; }
+    strong { font-weight: 600; }
+    em { font-style: italic; color: var(--text); }
+    ol, ul { padding-left: 22px; margin: 0 0 16px; font-size: 16px; }
+    li { margin-bottom: 6px; line-height: 1.6; }
+
+    /* ── Code ─────────────────────────────────────────────── */
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      font-size: 13px;
+      background: color-mix(in srgb, var(--accent) 10%, var(--card));
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 20px 22px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--code-text);
+      font-size: 1em;
+      border-radius: 0;
+      font-style: normal;
+    }
+
+    .kw  { color: var(--code-kw); font-style: normal; }
+    .fn  { color: var(--code-fn); font-style: normal; }
+    .st  { color: var(--code-st); font-style: normal; }
+    .cm  { color: var(--code-cm); font-style: italic; }
+    .nm  { color: var(--code-nm); font-style: normal; }
+    .op  { color: var(--code-op); font-style: normal; }
+
+    /* ── Math block ───────────────────────────────────────── */
+    .math-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 14px;
+      color: var(--text);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Callouts ─────────────────────────────────────────── */
+    .callout {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .callout.insight { border-left-color: var(--accent); }
+    .callout.note    { border-left-color: var(--link); }
+
+    .callout-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .callout.insight .callout-label { color: var(--accent); }
+    .callout.note    .callout-label { color: var(--link); }
+    .callout p { margin-bottom: 0; font-size: 15px; }
+
+    /* ── Output block ─────────────────────────────────────── */
+    .output {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-left: 3px solid var(--muted);
+      border-radius: 8px;
+      padding: 20px 22px;
+      margin: 20px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--code-cm);
+    }
+
+    .output-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+
+    /* ── Memory table ─────────────────────────────────────── */
+    .mem-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .mem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 13px;
+    }
+
+    .mem-table th {
+      background: var(--card);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .mem-table th:first-child { text-align: left; }
+
+    .mem-table td {
+      padding: 10px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .mem-table td:first-child { text-align: left; color: var(--muted); font-size: 12px; }
+    .mem-table tbody tr:last-child td { border-bottom: none; }
+    .mem-table .gain-row td { color: #22c55e; font-weight: 600; }
+    .mem-table .gain-row td:first-child { color: #22c55e; }
+    .mem-table .val-flash { color: #22c55e; }
+    .mem-table .val-std   { color: #ef4444; }
+
+    /* ── Attention diagram ────────────────────────────────── */
+    .attn-diagram {
+      margin: 24px 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px 16px;
+      overflow-x: auto;
+    }
+
+    .attn-svg { display: block; width: 100%; min-width: 480px; }
+
+    /* SVG element classes */
+    .attn-svg .at-title     { font-family: inherit; font-size: 13px; font-weight: 600; fill: var(--text); }
+    .attn-svg .at-lbl       { font-family: inherit; font-size: 12px; font-weight: 600; fill: var(--text); }
+    .attn-svg .at-sub       { font-family: inherit; font-size: 10px; fill: var(--muted); }
+    .attn-svg .at-sram      { fill: color-mix(in srgb, var(--accent) 10%, var(--card)); stroke: var(--accent); stroke-width: 1.5; }
+    .attn-svg .at-hbm       { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+    .attn-svg .at-tile-box  { fill: color-mix(in srgb, var(--accent) 18%, var(--card)); stroke: var(--accent); stroke-width: 1; }
+    .attn-svg .at-tile-lbl  { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; fill: var(--accent); }
+    .attn-svg .at-tile-box-grn { fill: color-mix(in srgb, #22c55e 18%, var(--card)); stroke: #22c55e; stroke-width: 1; }
+    .attn-svg .at-tile-lbl-grn { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; fill: #22c55e; }
+    .attn-svg .at-tile-sub  { font-family: inherit; font-size: 9px; fill: var(--muted); }
+    .attn-svg .at-div       { stroke: var(--border); stroke-dasharray: 4 3; }
+    .attn-svg .at-lbl-red   { font-family: inherit; font-size: 10px; fill: #ef4444; font-weight: 600; }
+    .attn-svg .at-lbl-gray  { font-family: inherit; font-size: 10px; fill: #64748b; }
+    .attn-svg .at-lbl-green { font-family: inherit; font-size: 10px; fill: #22c55e; }
+    .attn-svg .at-note-red  { font-family: inherit; font-size: 11px; fill: #ef4444; font-style: italic; }
+    .attn-svg .at-note-grn  { font-family: inherit; font-size: 11px; fill: #22c55e; font-style: italic; }
+    .attn-svg .at-hbm-red   { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; fill: #ef4444; }
+    .attn-svg .at-hbm-gray  { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; fill: #64748b; }
+    .attn-svg .at-hbm-grn   { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; fill: #22c55e; }
+
+    /* ── Block grid diagram ───────────────────────────────── */
+    .blk-diagram {
+      margin: 24px 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px 16px;
+      overflow-x: auto;
+    }
+    .blk-svg { display: block; width: 100%; min-width: 460px; }
+    .blk-svg .bk-done    { fill: color-mix(in srgb, var(--accent) 18%, var(--card)); stroke: var(--border); stroke-width: 1; }
+    .blk-svg .bk-cur     { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
+    .blk-svg .bk-pend    { fill: var(--bg); stroke: var(--border); stroke-width: 1; }
+    .blk-svg .bk-txt     { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; fill: var(--muted); }
+    .blk-svg .bk-txt-cur { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; fill: #ffffff; font-weight: 600; }
+    .blk-svg .bk-hdr     { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; fill: var(--text); }
+    .blk-svg .bk-axis    { font-family: inherit; font-size: 11px; fill: var(--muted); font-style: italic; }
+    .blk-svg .bk-title   { font-family: inherit; font-size: 13px; font-weight: 600; fill: var(--text); }
+    .blk-svg .bk-note    { font-family: inherit; font-size: 11px; fill: var(--muted); }
+    .blk-svg .bk-arr     { stroke: var(--muted); stroke-width: 1.2; }
+
+    /* ── Accumulator diagram ─────────────────────────────── */
+    .acc-diagram {
+      margin: 24px 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px 16px;
+      overflow-x: auto;
+    }
+    .acc-svg { display: block; width: 100%; min-width: 460px; }
+    .acc-svg .ac-box     { fill: var(--bg); stroke: var(--border); stroke-width: 1.5; }
+    .acc-svg .ac-box-fin { fill: color-mix(in srgb, #22c55e 8%, var(--card)); stroke: #22c55e; stroke-width: 2; }
+    .acc-svg .ac-hdr     { font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--accent); }
+    .acc-svg .ac-hdr-fin { font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; fill: #22c55e; }
+    .acc-svg .ac-var     { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; fill: var(--text); }
+    .acc-svg .ac-dim     { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; fill: var(--muted); }
+    .acc-svg .ac-fin     { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; fill: #22c55e; font-weight: 600; }
+    .acc-svg .ac-arr     { stroke: var(--muted); stroke-width: 1.5; }
+    .acc-svg .ac-lbl     { font-family: inherit; font-size: 9.5px; fill: var(--muted); font-style: italic; }
+    .acc-svg .ac-title   { font-family: inherit; font-size: 12px; fill: var(--muted); font-style: italic; }
+
+    /* ── Divider ──────────────────────────────────────────── */
+    .post-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .post-divider::before, .post-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .post-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0 40px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 20px; }
+      .post-footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <nav class="site-nav">
+    <a class="back-link" href="../index.html">Maxwell Tsai</a>
+  </nav>
+
+  <header class="post-header">
+    <div class="post-tag">Tutorial · Attention</div>
+    <h1 class="post-title">What is Flash Attention?</h1>
+    <p class="post-meta">April 18th, 2026</p>
+    <p class="post-subtitle">Flash Attention is one of the most widely used techniques in modern LLM training and inference. In this post, we explore the algorithm from first principles to understand why it matters. Based on <a href="https://arxiv.org/pdf/2205.14135" target="_blank">Dao et al., 2022</a>.</p>
+  </header>
+
+  <main class="post-content">
+
+    <h2>Problem Setup</h2>
+
+    <p>In a transformer, self-attention operates on <strong>N</strong> vectors each of dimension <strong>D</strong>. N is the sequence length (e.g., 1024, 8192) and D is the per-head feature dimension (e.g., 64). Before any attention computation, we first project these N vectors through three weight matrices to obtain the query, key, and value matrices:</p>
+
+    <div style="text-align:center; margin: 20px 0;">
+      $$\begin{aligned}
+        Q &= X W_Q \in \mathbb{R}^{N \times D} \\[6pt]
+        K &= X W_K \in \mathbb{R}^{N \times D} \\[6pt]
+        V &= X W_V \in \mathbb{R}^{N \times D}
+      \end{aligned}$$
+    </div>
+
+    <pre><code><span class="kw">import</span> torch
+
+N <span class="op">=</span> <span class="nm">128</span>   <span class="cm"># sequence length</span>
+D <span class="op">=</span> <span class="nm">32</span>    <span class="cm"># feature dimension</span>
+
+input_feats <span class="op">=</span> torch.<span class="fn">randn</span>(N, D)
+
+W_q <span class="op">=</span> torch.<span class="fn">randn</span>(D, D)
+W_k <span class="op">=</span> torch.<span class="fn">randn</span>(D, D)
+W_v <span class="op">=</span> torch.<span class="fn">randn</span>(D, D)
+
+Q <span class="op">=</span> input_feats <span class="op">@</span> W_q
+K <span class="op">=</span> input_feats <span class="op">@</span> W_k
+V <span class="op">=</span> input_feats <span class="op">@</span> W_v</code></pre>
+
+    <h2>Softmax and Safe Softmax</h2>
+
+    <p>The attention output is computed as:</p>
+
+    <div style="text-align:center; margin: 20px 0;">$$O = \text{Softmax}(QK^\top) \cdot V$$</div>
+
+    <p>where the softmax is applied row-wise to the <code>N×N</code> score matrix <code>S = QKᵀ</code>. For a single row <code>x</code>, standard softmax is:</p>
+
+    <div style="text-align:center; margin: 20px 0;">$$\sigma(x)_i = \frac{e^{x_i}}{\sum_j e^{x_j}}$$</div>
+
+    <p>The problem: if any value in <code>x</code> is large (say, 1000), then <code>exp(1000)</code> overflows to infinity in FP16/FP32. The fix is <strong>safe softmax</strong>. We subtract the row maximum <code>m = max(x)</code> before exponentiating:</p>
+
+    <div style="text-align:center; margin: 20px 0;">$$\sigma(x)_i = \frac{e^{x_i - m}}{\sum_j e^{x_j - m}}, \quad m = \max(x)$$</div>
+
+    <p>This is numerically identical to the original. Subtracting the same constant from numerator and denominator cancels out, so the largest exponent is now <code>exp(0) = 1</code> and there is no overflow.</p>
+
+    <pre><code><span class="kw">def</span> <span class="fn">softmax</span>(x, dim<span class="op">=-</span><span class="nm">1</span>):
+    m <span class="op">=</span> x.<span class="fn">max</span>(dim<span class="op">=</span>dim, keepdim<span class="op">=</span><span class="kw">True</span>).values
+    e <span class="op">=</span> torch.<span class="fn">exp</span>(x <span class="op">-</span> m)
+    <span class="kw">return</span> e <span class="op">/</span> e.<span class="fn">sum</span>(dim<span class="op">=</span>dim, keepdim<span class="op">=</span><span class="kw">True</span>)</code></pre>
+
+    <h2>Standard Attention and the Memory Wall</h2>
+
+    <p>Standard attention materializes <code>S</code> and <code>P</code> as full <code>N×N</code> matrices. These are computed in SRAM (fast on-chip memory), but they are too large to keep there, so they must be written out to HBM (GPU high-bandwidth memory, the large but slow off-chip DRAM), then read back again for the next step.</p>
+
+    <pre><code><span class="kw">def</span> <span class="fn">standard_attention</span>(Q, K, V):
+    <span class="cm"># load Q, K from HBM → compute → write S to HBM</span>
+    S <span class="op">=</span> Q <span class="op">@</span> K.T           <span class="cm"># [N, N]</span>
+    <span class="cm"># load S from HBM → compute → write P to HBM</span>
+    P <span class="op">=</span> <span class="fn">softmax</span>(S, dim<span class="op">=-</span><span class="nm">1</span>)  <span class="cm"># [N, N]</span>
+    <span class="cm"># load P, V from HBM → compute → write O to HBM</span>
+    O <span class="op">=</span> P <span class="op">@</span> V             <span class="cm"># [N, D]</span>
+    <span class="kw">return</span> O</code></pre>
+
+    <p>That's six HBM transfers total, and four of them move <code>O(N²)</code> data (writing <code>S</code>, reading <code>S</code>, writing <code>P</code>, reading <code>P</code>). At large sequence lengths this is the bottleneck: the GPU cores sit idle while data crawls across the memory bus.</p>
+
+    <!-- Standard Attention diagram -->
+    <div class="attn-diagram">
+      <svg class="attn-svg" viewBox="0 0 560 310" role="img" aria-label="Standard Attention HBM data transfers">
+        <defs>
+          <marker id="arr-gray"  markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0, 7 2.5, 0 5" fill="#64748b"/></marker>
+          <marker id="arr-red"   markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0, 7 2.5, 0 5" fill="#ef4444"/></marker>
+          <marker id="arr-green" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0, 7 2.5, 0 5" fill="#22c55e"/></marker>
+          <marker id="arr-blue"  markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0, 7 2.5, 0 5" fill="#0ea5e9"/></marker>
+        </defs>
+
+        <text x="280" y="22" text-anchor="middle" class="at-title">Standard Attention</text>
+
+        <!-- SRAM box -->
+        <rect x="100" y="36" width="100" height="240" rx="6" class="at-sram"/>
+        <text x="150" y="58" text-anchor="middle" class="at-lbl">SRAM</text>
+        <text x="150" y="72" text-anchor="middle" class="at-sub">on chip · fast</text>
+
+        <!-- HBM box -->
+        <rect x="360" y="36" width="110" height="240" rx="6" class="at-hbm"/>
+        <text x="415" y="58" text-anchor="middle" class="at-lbl">HBM</text>
+        <text x="415" y="72" text-anchor="middle" class="at-sub">off chip · slow</text>
+        <text x="415" y="100" text-anchor="middle" class="at-hbm-gray">Q, K</text>
+        <text x="415" y="144" text-anchor="middle" class="at-hbm-red">S [N×N]</text>
+        <text x="415" y="208" text-anchor="middle" class="at-hbm-red">P [N×N]</text>
+        <text x="415" y="228" text-anchor="middle" class="at-hbm-gray">V</text>
+        <text x="415" y="260" text-anchor="middle" class="at-hbm-grn">O</text>
+
+        <!-- 1: load Q, K  HBM→SRAM -->
+        <line x1="358" y1="96"  x2="202" y2="96"  stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+        <text x="280" y="91" text-anchor="middle" class="at-lbl-gray">load Q, K</text>
+
+        <!-- 2: write S  SRAM→HBM -->
+        <line x1="202" y1="128" x2="358" y2="128" stroke="#ef4444" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="280" y="123" text-anchor="middle" class="at-lbl-red">write S [N×N] ✗</text>
+
+        <!-- 3: load S  HBM→SRAM -->
+        <line x1="358" y1="160" x2="202" y2="160" stroke="#ef4444" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="280" y="155" text-anchor="middle" class="at-lbl-red">load S [N×N] ✗</text>
+
+        <!-- 4: write P  SRAM→HBM -->
+        <line x1="202" y1="192" x2="358" y2="192" stroke="#ef4444" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="280" y="187" text-anchor="middle" class="at-lbl-red">write P [N×N] ✗</text>
+
+        <!-- 5: load P, V  HBM→SRAM -->
+        <line x1="358" y1="224" x2="202" y2="224" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+        <text x="280" y="219" text-anchor="middle" class="at-lbl-gray">load P, V</text>
+
+        <!-- 6: write O  SRAM→HBM -->
+        <line x1="202" y1="256" x2="358" y2="256" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+        <text x="280" y="251" text-anchor="middle" class="at-lbl-green">write O</text>
+
+        <text x="280" y="297" text-anchor="middle" class="at-note-red">4 transfers of O(N²) data</text>
+      </svg>
+    </div>
+
+    <!-- Flash Attention diagram -->
+    <div class="attn-diagram">
+      <svg class="attn-svg" viewBox="0 0 560 250" role="img" aria-label="Flash Attention HBM data transfers">
+
+        <text x="280" y="22" text-anchor="middle" class="at-title">Flash Attention</text>
+
+        <!-- SRAM box -->
+        <rect x="100" y="36" width="100" height="185" rx="6" class="at-sram"/>
+        <text x="150" y="58" text-anchor="middle" class="at-lbl">SRAM</text>
+        <text x="150" y="72" text-anchor="middle" class="at-sub">on chip · fast</text>
+        <!-- Tile indicator -->
+        <rect x="110" y="84" width="80" height="52" rx="4" class="at-tile-box"/>
+        <text x="150" y="103" text-anchor="middle" class="at-tile-lbl">Q_i, K_j, V_j</text>
+        <text x="150" y="118" text-anchor="middle" class="at-tile-sub">tiles fit here</text>
+        <rect x="110" y="148" width="80" height="42" rx="4" class="at-tile-box-grn"/>
+        <text x="150" y="168" text-anchor="middle" class="at-tile-lbl-grn">O_i</text>
+        <text x="150" y="182" text-anchor="middle" class="at-tile-sub">output</text>
+
+        <!-- HBM box -->
+        <rect x="360" y="36" width="110" height="185" rx="6" class="at-hbm"/>
+        <text x="415" y="58" text-anchor="middle" class="at-lbl">HBM</text>
+        <text x="415" y="72" text-anchor="middle" class="at-sub">off chip · slow</text>
+        <text x="415" y="112" text-anchor="middle" class="at-hbm-gray">Q, K, V</text>
+        <text x="415" y="190" text-anchor="middle" class="at-hbm-grn">O</text>
+
+        <!-- load tiles  HBM→SRAM -->
+        <line x1="358" y1="108" x2="202" y2="108" stroke="#0ea5e9" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <text x="280" y="103" text-anchor="middle" class="at-lbl-gray">load tiles</text>
+
+        <!-- Loop label -->
+        <text x="280" y="136" text-anchor="middle" class="at-lbl-gray">repeated per</text>
+        <text x="280" y="151" text-anchor="middle" class="at-lbl-gray">(i, j) block pair</text>
+
+        <!-- write O_i tile  SRAM→HBM -->
+        <line x1="202" y1="186" x2="358" y2="186" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+        <text x="280" y="181" text-anchor="middle" class="at-lbl-green">write O_i tile</text>
+
+        <text x="280" y="238" text-anchor="middle" class="at-note-grn">many small tile transfers replace four O(N²) HBM round-trips ✓</text>
+      </svg>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-label">Core Insight</div>
+      <p>Flash Attention's main goal is to eliminate the large O(N²) HBM transfers that dominate standard attention. Instead of writing and reading back full N×N matrices for <code>S</code> and <code>P</code>, it processes small tiles that fit entirely in SRAM. Each block pair triggers a compact tile load and a compact tile write — many more transfers in total, but each one moves a tiny fraction of the data, keeping the HBM bus busy with work proportional to N rather than N².</p>
+    </div>
+
+    <h2>Flash Attention: Computing in Blocks</h2>
+
+    <p>Flash Attention tiles <code>Q</code>, <code>K</code>, <code>V</code> into blocks of <code>B</code> rows each, where <code>B</code> is chosen so that a few blocks fit in SRAM simultaneously. We maintain three running accumulators that are updated incrementally as we process each block pair, so we never need a full <code>N×N</code> matrix in memory:</p>
+
+    <ul>
+      <li><code>O ∈ ℝ^(N×D)</code>, the output accumulator, initialized to zeros</li>
+      <li><code>M ∈ ℝ^N</code>, the running row-maximum, initialized to −∞</li>
+      <li><code>L ∈ ℝ^N</code>, the running row-sum of exponentials, initialized to zeros</li>
+    </ul>
+
+    <p>The outer loop iterates over <code>j</code> (blocks of <code>K</code> and <code>V</code>) and the inner loop over <code>i</code> (blocks of <code>Q</code>). For each pair <code>(i, j)</code>, the tiles <code>Q_i</code>, <code>K_j</code>, <code>V_j</code> are loaded into SRAM. A small <code>B×B</code> score block <code>S_ij = Q_i · K_jᵀ</code> is computed entirely in SRAM, and the three accumulators for row block <code>i</code> are updated before moving on.</p>
+
+    <div class="blk-diagram">
+      <svg class="blk-svg" viewBox="0 0 560 240" role="img" aria-label="Block processing order grid for Flash Attention">
+        <defs>
+          <marker id="bk-arr" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0 0, 6 2.5, 0 5" fill="#64748b"/></marker>
+        </defs>
+
+        <text x="280" y="18" text-anchor="middle" class="bk-title">Block Processing Order</text>
+
+        <!-- Axis labels -->
+        <text x="275" y="38" text-anchor="middle" class="bk-axis">K/V blocks  →</text>
+        <text x="72" y="130" text-anchor="middle" class="bk-axis" transform="rotate(-90, 72, 130)">Q blocks  ←</text>
+
+        <!-- Column headers: j = 0..4 -->
+        <text x="142" y="55" text-anchor="middle" class="bk-hdr">j=0</text>
+        <text x="204" y="55" text-anchor="middle" class="bk-hdr">j=1</text>
+        <text x="266" y="55" text-anchor="middle" class="bk-hdr">j=2</text>
+        <text x="328" y="55" text-anchor="middle" class="bk-hdr">j=3</text>
+        <text x="390" y="55" text-anchor="middle" class="bk-hdr">j=4</text>
+
+        <!-- Row headers: i = 0..3 -->
+        <text x="102" y="82"  text-anchor="end" class="bk-hdr">i=0</text>
+        <text x="102" y="120" text-anchor="end" class="bk-hdr">i=1</text>
+        <text x="102" y="158" text-anchor="end" class="bk-hdr">i=2</text>
+        <text x="102" y="196" text-anchor="end" class="bk-hdr">i=3</text>
+
+        <!-- ── Column j=0: all done ── -->
+        <rect x="111" y="62"  width="62" height="36" rx="3" class="bk-done"/>
+        <text x="142" y="84"  text-anchor="middle" class="bk-txt">✓</text>
+        <rect x="111" y="100" width="62" height="36" rx="3" class="bk-done"/>
+        <text x="142" y="122" text-anchor="middle" class="bk-txt">✓</text>
+        <rect x="111" y="138" width="62" height="36" rx="3" class="bk-done"/>
+        <text x="142" y="160" text-anchor="middle" class="bk-txt">✓</text>
+        <rect x="111" y="176" width="62" height="36" rx="3" class="bk-done"/>
+        <text x="142" y="198" text-anchor="middle" class="bk-txt">✓</text>
+
+        <!-- ── Column j=1: i=0 done, i=1 current, i=2,3 pending ── -->
+        <rect x="173" y="62"  width="62" height="36" rx="3" class="bk-done"/>
+        <text x="204" y="84"  text-anchor="middle" class="bk-txt">✓</text>
+        <rect x="173" y="100" width="62" height="36" rx="3" class="bk-cur"/>
+        <text x="204" y="122" text-anchor="middle" class="bk-txt-cur">now</text>
+        <rect x="173" y="138" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="173" y="176" width="62" height="36" rx="3" class="bk-pend"/>
+
+        <!-- ── Columns j=2,3,4: all pending ── -->
+        <rect x="235" y="62"  width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="235" y="100" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="235" y="138" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="235" y="176" width="62" height="36" rx="3" class="bk-pend"/>
+
+        <rect x="297" y="62"  width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="297" y="100" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="297" y="138" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="297" y="176" width="62" height="36" rx="3" class="bk-pend"/>
+
+        <rect x="359" y="62"  width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="359" y="100" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="359" y="138" width="62" height="36" rx="3" class="bk-pend"/>
+        <rect x="359" y="176" width="62" height="36" rx="3" class="bk-pend"/>
+
+        <!-- Legend -->
+        <rect x="440" y="95"  width="14" height="14" rx="2" class="bk-done"/>
+        <text x="458" y="106" class="bk-note">done</text>
+        <rect x="440" y="117" width="14" height="14" rx="2" class="bk-cur"/>
+        <text x="458" y="128" class="bk-note">current</text>
+        <rect x="440" y="139" width="14" height="14" rx="2" class="bk-pend"/>
+        <text x="458" y="150" class="bk-note">pending</text>
+
+        <!-- Caption -->
+        <text x="280" y="228" text-anchor="middle" class="bk-note">Each cell: load Q_i, K_j, V_j tiles → compute S_ij [B×B] in SRAM → update O_i, M_i, L_i</text>
+      </svg>
+    </div>
+
+    <p>The key question is:</p>
+    <blockquote style="border-left: 3px solid var(--border); margin: 24px 40px; padding: 12px 24px; color: var(--muted); font-size: 18px; font-weight: 600; font-style: italic;">How do you compute softmax without having seen all N rows?</blockquote>
+
+    <h3>The Online Update Equations</h3>
+
+    <p>For each block, we compute a local maximum <code>m_ij</code> and a local row-sum <code>l_ij</code>. We then merge them with the running statistics using rescaling factors:</p>
+
+    <div style="text-align:center; margin: 20px 0;">
+      $$\begin{alignat}{2}
+        &M_i^{\text{new}} &&= \max(M_i,\; m_{ij}) \\[10pt]
+        &L_i^{\text{new}} &&= \alpha \cdot L_i + \beta \cdot l_{ij} \\[10pt]
+        &O_i^{\text{new}} &&= \frac{1}{L_i^{\text{new}}} \left( \alpha \cdot L_i \cdot O_i + \beta \cdot P_{ij} V_j \right)
+      \end{alignat}$$
+    </div>
+
+    <p style="text-align:center; color: var(--muted); font-size: 15px; margin: 4px 0;">where α and β are</p>
+
+    <div style="text-align:center; margin: 12px 0 20px;">
+      $$\begin{alignat}{2}
+        &\alpha &&= \exp(M_i - M_i^{\text{new}}) \\[10pt]
+        &\beta  &&= \exp(m_{ij} - M_i^{\text{new}})
+      \end{alignat}$$
+    </div>
+
+    <p>α and β are rescaling factors that keep the partial sums consistent as the running maximum <code>M_i</code> grows. Because softmax divides by a sum of exponentials anchored to the row maximum, every time a new block raises <code>M_i</code>, all previously accumulated values become stale — they were computed relative to the old maximum. α corrects for this by rescaling the old running sum <code>L_i</code> and output <code>O_i</code> to be expressed relative to <code>M_i<sup>new</sup></code>. β plays the symmetric role for the current block, converting its local exponentials (computed relative to <code>m_ij</code>) into the same reference frame. If a new block does not raise the maximum, α = exp(0) = 1 and nothing needs adjusting.</p>
+
+
+    <div class="callout note">
+      <div class="callout-label">Connection to Safe Softmax</div>
+      <p>This is the same idea as safe softmax, applied online one block at a time rather than to the full row at once. The running maximum <code>M_i</code> plays the same role as <code>m = max(x)</code> in the single-vector case, and the rescaling keeps the partial sums consistent as that maximum grows.</p>
+    </div>
+
+    <h2>Implementation</h2>
+
+    <pre><code><span class="kw">def</span> <span class="fn">flash_attention</span>(Q, K, V, B<span class="op">=</span><span class="nm">8</span>):
+    N, D <span class="op">=</span> Q.shape
+    N_blocks <span class="op">=</span> N <span class="op">//</span> B
+
+    M <span class="op">=</span> torch.<span class="fn">full</span>((N, <span class="nm">1</span>), <span class="fn">float</span>(<span class="st">"-inf"</span>))
+    L <span class="op">=</span> torch.<span class="fn">zeros</span>((N, <span class="nm">1</span>))
+    O <span class="op">=</span> torch.<span class="fn">zeros</span>((N, D))
+
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(N_blocks):
+        K_j <span class="op">=</span> K[j<span class="op">*</span>B : (j<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+        V_j <span class="op">=</span> V[j<span class="op">*</span>B : (j<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(N_blocks):
+            Q_i <span class="op">=</span> Q[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+            O_i <span class="op">=</span> O[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+            M_i <span class="op">=</span> M[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+            L_i <span class="op">=</span> L[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B]
+
+            S_ij <span class="op">=</span> Q_i <span class="op">@</span> K_j.T                              <span class="cm"># [B, B]</span>
+            m_ij, _ <span class="op">=</span> S_ij.<span class="fn">max</span>(dim<span class="op">=-</span><span class="nm">1</span>, keepdim<span class="op">=</span><span class="kw">True</span>)     <span class="cm"># [B, 1]</span>
+            p_ij <span class="op">=</span> torch.<span class="fn">exp</span>(S_ij <span class="op">-</span> m_ij)                  <span class="cm"># [B, B]</span>
+            l_ij <span class="op">=</span> p_ij.<span class="fn">sum</span>(dim<span class="op">=-</span><span class="nm">1</span>, keepdim<span class="op">=</span><span class="kw">True</span>)          <span class="cm"># [B, 1]</span>
+
+            M_i_new    <span class="op">=</span> torch.<span class="fn">max</span>(M_i, m_ij)
+            prev_scale <span class="op">=</span> torch.<span class="fn">exp</span>(M_i <span class="op">-</span> M_i_new)
+            curr_scale <span class="op">=</span> torch.<span class="fn">exp</span>(m_ij <span class="op">-</span> M_i_new)
+
+            L_i_new <span class="op">=</span> prev_scale <span class="op">*</span> L_i <span class="op">+</span> curr_scale <span class="op">*</span> l_ij
+            O_i_new <span class="op">=</span> (<span class="nm">1</span> <span class="op">/</span> L_i_new) <span class="op">*</span> (L_i <span class="op">*</span> prev_scale <span class="op">*</span> O_i <span class="op">+</span> curr_scale <span class="op">*</span> p_ij <span class="op">@</span> V_j)
+
+            O[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B] <span class="op">=</span> O_i_new
+            L[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B] <span class="op">=</span> L_i_new
+            M[i<span class="op">*</span>B : (i<span class="op">+</span><span class="nm">1</span>)<span class="op">*</span>B] <span class="op">=</span> M_i_new
+
+    <span class="kw">return</span> O</code></pre>
+
+    <div class="callout note">
+      <div class="callout-label">A Note on Speed</div>
+      <p>This implementation is correct but runs slowly. The nested Python loop triggers separate PyTorch dispatch for every block pair, so the overhead dominates any I/O savings. In a real CUDA implementation the entire algorithm is fused into a single GPU kernel, which eliminates that overhead and turns the reduced HBM traffic into actual speedup. See the <a href="https://github.com/Dao-AILab/flash-attention" target="_blank">flash-attn</a> library for a production kernel.</p>
+    </div>
+
+    <p>Verifying against the standard implementation:</p>
+
+    <pre><code>O_std   <span class="op">=</span> <span class="fn">standard_attention</span>(Q, K, V)
+O_flash <span class="op">=</span> <span class="fn">flash_attention</span>(Q, K, V, B<span class="op">=</span><span class="nm">8</span>)
+<span class="fn">print</span>(torch.<span class="fn">allclose</span>(O_std, O_flash, atol<span class="op">=</span><span class="nm">1e-5</span>))</code></pre>
+
+    <p>The result is <code>True</code>.</p>
+
+    <h2>Memory Benchmark</h2>
+
+    <p>The table below shows peak GPU memory usage at varying sequence lengths, measured using <code>torch.cuda.max_memory_allocated()</code> (D = 64, block size B = 16). Standard attention's memory grows as <strong>O(N²)</strong> because it allocates the full <code>S</code> and <code>P</code> matrices. Flash attention avoids these, so its memory grows only as <strong>O(N)</strong>.</p>
+
+    <div style="margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; padding: 16px 8px 8px; overflow-x: auto;">
+      <svg viewBox="0 0 560 230" style="display:block; width:100%; min-width:460px;" role="img" aria-label="Peak memory usage vs sequence length">
+
+        <!-- Gridlines + y-axis labels -->
+        <line x1="65" y1="190" x2="545" y2="190" stroke-width="1" stroke="var(--border)"/>
+        <text x="58" y="194" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">0</text>
+
+        <line x1="65" y1="160" x2="545" y2="160" stroke-width="1" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="58" y="164" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">50</text>
+
+        <line x1="65" y1="129" x2="545" y2="129" stroke-width="1" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="58" y="133" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">100</text>
+
+        <line x1="65" y1="99" x2="545" y2="99" stroke-width="1" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="58" y="103" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">150</text>
+
+        <line x1="65" y1="69" x2="545" y2="69" stroke-width="1" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="58" y="73" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">200</text>
+
+        <line x1="65" y1="38" x2="545" y2="38" stroke-width="1" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="58" y="42" text-anchor="end" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">250</text>
+
+        <!-- Y-axis unit -->
+        <text x="14" y="115" text-anchor="middle" transform="rotate(-90,14,115)" style="font-size:10px; fill:var(--muted); font-family:inherit;">MB</text>
+
+        <!-- X-axis labels -->
+        <text x="65"  y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">128</text>
+        <text x="161" y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">256</text>
+        <text x="257" y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">512</text>
+        <text x="353" y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">1024</text>
+        <text x="449" y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">2048</text>
+        <text x="545" y="208" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:'JetBrains Mono',monospace;">4096</text>
+        <text x="305" y="222" text-anchor="middle" style="font-size:10px; fill:var(--muted); font-family:inherit;">Sequence length N</text>
+
+        <!-- Standard Attention line -->
+        <polyline points="65,185 161,184 257,182 353,175 449,145 545,27" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="65"  cy="185" r="3" fill="#ef4444"/>
+        <circle cx="161" cy="184" r="3" fill="#ef4444"/>
+        <circle cx="257" cy="182" r="3" fill="#ef4444"/>
+        <circle cx="353" cy="175" r="3" fill="#ef4444"/>
+        <circle cx="449" cy="145" r="3" fill="#ef4444"/>
+        <circle cx="545" cy="27"  r="3" fill="#ef4444"/>
+
+        <!-- Flash Attention line -->
+        <polyline points="65,185 161,185 257,185 353,184 449,183 545,182" fill="none" stroke="#22c55e" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="65"  cy="185" r="3" fill="#22c55e"/>
+        <circle cx="161" cy="185" r="3" fill="#22c55e"/>
+        <circle cx="257" cy="185" r="3" fill="#22c55e"/>
+        <circle cx="353" cy="184" r="3" fill="#22c55e"/>
+        <circle cx="449" cy="183" r="3" fill="#22c55e"/>
+        <circle cx="545" cy="182" r="3" fill="#22c55e"/>
+
+        <!-- Legend -->
+        <line x1="350" y1="20" x2="370" y2="20" stroke="#ef4444" stroke-width="2"/>
+        <circle cx="360" cy="20" r="3" fill="#ef4444"/>
+        <text x="376" y="24" style="font-size:11px; fill:var(--muted); font-family:inherit;">Standard</text>
+
+        <line x1="450" y1="20" x2="470" y2="20" stroke="#22c55e" stroke-width="2"/>
+        <circle cx="460" cy="20" r="3" fill="#22c55e"/>
+        <text x="476" y="24" style="font-size:11px; fill:var(--muted); font-family:inherit;">Flash</text>
+      </svg>
+    </div>
+
+    <div class="mem-table-wrap">
+      <table class="mem-table">
+        <thead>
+          <tr>
+            <th>Seq length N</th>
+            <th>Standard (MB)</th>
+            <th>Flash (MB)</th>
+            <th>Memory saved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>128</td>
+            <td class="val-std">8.8</td>
+            <td class="val-flash">8.5</td>
+            <td>3.4%</td>
+          </tr>
+          <tr>
+            <td>256</td>
+            <td class="val-std">9.6</td>
+            <td class="val-flash">8.7</td>
+            <td>9.4%</td>
+          </tr>
+          <tr>
+            <td>512</td>
+            <td class="val-std">12.8</td>
+            <td class="val-flash">9.0</td>
+            <td>29.7%</td>
+          </tr>
+          <tr>
+            <td>1024</td>
+            <td class="val-std">25.3</td>
+            <td class="val-flash">9.6</td>
+            <td>62.1%</td>
+          </tr>
+          <tr>
+            <td>2048</td>
+            <td class="val-std">74.2</td>
+            <td class="val-flash">10.9</td>
+            <td>85.3%</td>
+          </tr>
+          <tr>
+            <td>4096</td>
+            <td class="val-std">267.9</td>
+            <td class="val-flash">13.4</td>
+            <td>95.0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>What This Implementation Leaves Out</h2>
+
+    <p>This tutorial covers the core memory-saving mechanism of Flash Attention. The full system adds several important components on top:</p>
+
+    <ul>
+      <li><strong>Causal masking.</strong> In autoregressive models, each token may only attend to past tokens. This requires masking out future positions in each <code>S_ij</code> block before the softmax. Flash Attention handles this by skipping blocks that lie entirely below the diagonal and partially masking those that straddle it.</li>
+      <li><strong>Multi-head attention.</strong> In practice, attention is computed across multiple independent heads in parallel, each with its own Q, K, V projections. Flash Attention applies the same block algorithm to each head independently.</li>
+<li><strong>Real CUDA kernels.</strong> The production implementation fuses the entire nested loop into a single kernel, avoiding all Python overhead and exploiting GPU-specific optimizations like warp-level parallelism and shared memory reuse.</li>
+    </ul>
+
+    <div class="post-divider">∎</div>
+
+    <h2>Citation</h2>
+
+    <p>If you found this post useful, please cite the original paper and this blog:</p>
+
+    <pre><code><span class="cm"># Original Paper</span>
+@inproceedings{dao2022flashattention,
+  title     = {Flash{A}ttention: Fast and Memory-Efficient Exact Attention with {IO}-Awareness},
+  author    = {Dao, Tri and Fu, Daniel Y. and Ermon, Stefano and Rudra, Atri and R{\'e}, Christopher},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022}
+}
+
+<span class="cm"># This Blog</span>
+@misc{tsai2026flashattention,
+  title  = {{What is Flash Attention?}},
+  author = {Tsai, Chen-Han},
+  year   = {2026},
+  url    = {https://mxtsai.github.io/blogs/flash-attention.html}
+}</code></pre>
+
+  </main>
+
+  <footer class="post-footer">
+    <span>Built with PyTorch · Based on <a href="https://arxiv.org/pdf/2205.14135" target="_blank">FlashAttention (Dao et al., 2022)</a></span>
+    <a class="back-link" href="../index.html" style="margin-top:0">Back to home</a>
+  </footer>
+</div>
+
+</body>
+</html>
