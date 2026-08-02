@@ -303,6 +303,28 @@ a:hover {
   object-fit: contain;
 }
 
+.tl-head--compact {
+  margin-bottom: 0;
+}
+
+.tl-head--nvidia {
+  grid-template-columns: 58px 1fr;
+}
+
+.tl-logo-picture {
+  display: block;
+  width: 58px;
+  height: 49px;
+  overflow: hidden;
+}
+
+.tl-logo--nvidia {
+  display: block;
+  width: 58px;
+  height: auto;
+  max-width: none;
+}
+
 .tl-bullets {
   margin: 0;
   padding-left: 18px;
